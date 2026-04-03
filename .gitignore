@@ -1,0 +1,25 @@
+# Dependencies
+web/node_modules/
+web/.next/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build
+api/psiencontra
+api/tmp/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
