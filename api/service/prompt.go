@@ -70,27 +70,27 @@ Com base nas respostas acima, gere EXCLUSIVAMENTE um JSON válido (sem markdown,
     "psicometria": <0-100>
   },
   "approach_details": {
-    "psicanalise": {"score": <0-100>, "description": "<2-3 frases explicando a afinidade>"},
-    "fenomenologia": {"score": <0-100>, "description": "<2-3 frases>"},
-    "comportamental": {"score": <0-100>, "description": "<2-3 frases>"},
-    "tcc": {"score": <0-100>, "description": "<2-3 frases>"},
-    "junguiana": {"score": <0-100>, "description": "<2-3 frases>"},
-    "gestalt": {"score": <0-100>, "description": "<2-3 frases>"},
-    "socio_historica": {"score": <0-100>, "description": "<2-3 frases>"},
-    "sistemica": {"score": <0-100>, "description": "<2-3 frases>"}
+    "psicanalise": {"score": <0-100>, "description": "<1 frase curta>"},
+    "fenomenologia": {"score": <0-100>, "description": "<1 frase curta>"},
+    "comportamental": {"score": <0-100>, "description": "<1 frase curta>"},
+    "tcc": {"score": <0-100>, "description": "<1 frase curta>"},
+    "junguiana": {"score": <0-100>, "description": "<1 frase curta>"},
+    "gestalt": {"score": <0-100>, "description": "<1 frase curta>"},
+    "socio_historica": {"score": <0-100>, "description": "<1 frase curta>"},
+    "sistemica": {"score": <0-100>, "description": "<1 frase curta>"}
   },
   "field_details": {
-    "clinica": {"score": <0-100>, "description": "<2-3 frases explicando a afinidade>"},
-    "organizacional": {"score": <0-100>, "description": "<2-3 frases>"},
-    "escolar": {"score": <0-100>, "description": "<2-3 frases>"},
-    "social": {"score": <0-100>, "description": "<2-3 frases>"},
-    "saude": {"score": <0-100>, "description": "<2-3 frases>"},
-    "juridica": {"score": <0-100>, "description": "<2-3 frases>"},
-    "esporte": {"score": <0-100>, "description": "<2-3 frases>"},
-    "neuropsicologia": {"score": <0-100>, "description": "<2-3 frases>"},
-    "psicometria": {"score": <0-100>, "description": "<2-3 frases>"}
+    "clinica": {"score": <0-100>, "description": "<1 frase curta>"},
+    "organizacional": {"score": <0-100>, "description": "<1 frase curta>"},
+    "escolar": {"score": <0-100>, "description": "<1 frase curta>"},
+    "social": {"score": <0-100>, "description": "<1 frase curta>"},
+    "saude": {"score": <0-100>, "description": "<1 frase curta>"},
+    "juridica": {"score": <0-100>, "description": "<1 frase curta>"},
+    "esporte": {"score": <0-100>, "description": "<1 frase curta>"},
+    "neuropsicologia": {"score": <0-100>, "description": "<1 frase curta>"},
+    "psicometria": {"score": <0-100>, "description": "<1 frase curta>"}
   },
-  "summary": "<Parágrafo de 4-5 frases resumindo o perfil geral do estudante, suas inclinações teóricas predominantes e campos de atuação mais alinhados>"
+  "summary": "<2-3 frases resumindo o perfil do estudante>"
 }
 
 REGRAS IMPORTANTES:

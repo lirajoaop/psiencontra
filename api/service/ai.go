@@ -122,7 +122,7 @@ func (s *AIService) callGroq(prompt string) (*AIResult, error) {
 			{"role": "user", "content": prompt},
 		},
 		"temperature":     0.7,
-		"max_tokens":      8192,
+		"max_tokens":      4096,
 		"response_format": map[string]string{"type": "json_object"},
 	}
 
