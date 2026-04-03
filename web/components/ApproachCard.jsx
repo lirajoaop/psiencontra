@@ -9,7 +9,7 @@ export default function ApproachCard({ name, score, description, color, rank }) 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: rank * 0.1 }}
-      className="bg-white rounded-xl p-5 shadow-md border border-violet-100 hover:shadow-lg transition-shadow"
+      className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-md border border-violet-100 dark:border-gray-700 hover:shadow-lg transition-shadow"
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-3">
@@ -19,13 +19,13 @@ export default function ApproachCard({ name, score, description, color, rank }) 
           >
             {rank}
           </span>
-          <h4 className="font-bold text-violet-900">{name}</h4>
+          <h4 className="font-bold text-violet-900 dark:text-violet-200">{name}</h4>
         </div>
         <span className="text-2xl font-bold" style={{ color }}>{score}%</span>
       </div>
       <ScoreBar score={score} color={color} />
       {description && (
-        <p className="text-sm text-gray-600 mt-3 leading-relaxed">{description}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mt-3 leading-relaxed">{description}</p>
       )}
     </motion.div>
   );

@@ -7,6 +7,7 @@ import RadarChartResult from "@/components/RadarChartResult";
 import ApproachCard from "@/components/ApproachCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Button from "@/components/Button";
+import ThemeToggle from "@/components/ThemeToggle";
 import { getResult, getPDFUrl } from "@/lib/api";
 import {
   APPROACH_LABELS,
@@ -39,7 +40,7 @@ export default function Resultado({ params }) {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 px-6">
-        <p className="text-red-600">{error}</p>
+        <p className="text-red-600 dark:text-red-400">{error}</p>
         <Button onClick={() => router.push("/")} variant="secondary">Voltar ao início</Button>
       </div>
     );
@@ -88,7 +89,10 @@ export default function Resultado({ params }) {
   return (
     <main className="flex-1 pb-12">
       {/* Header */}
-      <div className="bg-gradient-to-r from-violet-600 to-purple-700 text-white py-10 px-6">
+      <div className="bg-gradient-to-r from-violet-600 to-purple-700 text-white py-10 px-6 relative">
+        <div className="absolute top-4 right-4 z-20">
+          <ThemeToggle />
+        </div>
         <div className="max-w-5xl mx-auto text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -126,7 +130,7 @@ export default function Resultado({ params }) {
         </div>
 
         {/* Approach Cards */}
-        <h2 className="text-xl font-bold text-violet-900 mb-4">Ranking de Abordagens</h2>
+        <h2 className="text-xl font-bold text-violet-900 dark:text-violet-200 mb-4">Ranking de Abordagens</h2>
         <div className="grid gap-4 mb-10">
           {sortedApproaches.map((a) => (
             <ApproachCard
@@ -141,7 +145,7 @@ export default function Resultado({ params }) {
         </div>
 
         {/* Field Cards */}
-        <h2 className="text-xl font-bold text-violet-900 mb-4">Ranking de Campos de Atuação</h2>
+        <h2 className="text-xl font-bold text-violet-900 dark:text-violet-200 mb-4">Ranking de Campos de Atuação</h2>
         <div className="grid gap-4 mb-10">
           {sortedFields.map((f) => (
             <ApproachCard
@@ -161,7 +165,7 @@ export default function Resultado({ params }) {
             href={getPDFUrl(id)}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 py-3 rounded-xl font-semibold bg-violet-600 text-white hover:bg-violet-700 shadow-lg shadow-violet-200 transition-all text-center"
+            className="px-6 py-3 rounded-xl font-semibold bg-violet-600 text-white hover:bg-violet-700 shadow-lg shadow-violet-200 dark:shadow-violet-900/50 transition-all text-center"
           >
             Baixar PDF
           </a>

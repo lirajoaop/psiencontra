@@ -7,6 +7,7 @@ import ProgressBar from "@/components/ProgressBar";
 import QuestionCard from "@/components/QuestionCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Button from "@/components/Button";
+import ThemeToggle from "@/components/ThemeToggle";
 import { getQuestions, createSession, submitResponses } from "@/lib/api";
 
 export default function Questionario() {
@@ -86,7 +87,7 @@ export default function Questionario() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 px-6">
-        <p className="text-red-600 text-center">{error}</p>
+        <p className="text-red-600 dark:text-red-400 text-center">{error}</p>
         <Button onClick={() => setError(null)} variant="secondary">Tentar novamente</Button>
       </div>
     );
@@ -99,13 +100,16 @@ export default function Questionario() {
   return (
     <main className="flex-1 flex flex-col">
       {/* Header */}
-      <div className="bg-white border-b border-violet-100 px-6 py-4">
+      <div className="bg-white dark:bg-gray-900 border-b border-violet-100 dark:border-gray-700 px-6 py-4">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-3">
-            <h1 className="text-lg font-bold text-violet-900">PsiEncontra</h1>
-            <span className="text-xs text-violet-400 bg-violet-50 px-2 py-1 rounded-full">
-              {question.block === "approaches" ? "Abordagens" : "Campos de Atuação"}
-            </span>
+            <h1 className="text-lg font-bold text-violet-900 dark:text-violet-200">PsiEncontra</h1>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-violet-400 bg-violet-50 dark:bg-violet-900/50 dark:text-violet-300 px-2 py-1 rounded-full">
+                {question.block === "approaches" ? "Abordagens" : "Campos de Atuação"}
+              </span>
+              <ThemeToggle />
+            </div>
           </div>
           <ProgressBar current={current} total={questions.length} />
         </div>
@@ -124,7 +128,7 @@ export default function Questionario() {
       </div>
 
       {/* Navigation */}
-      <div className="bg-white border-t border-violet-100 px-6 py-4">
+      <div className="bg-white dark:bg-gray-900 border-t border-violet-100 dark:border-gray-700 px-6 py-4">
         <div className="max-w-2xl mx-auto flex justify-between items-center">
           <Button
             onClick={handlePrev}
@@ -140,7 +144,7 @@ export default function Questionario() {
                 key={i}
                 onClick={() => { setDirection(i > current ? 1 : -1); setCurrent(i); }}
                 className={`w-2 h-2 rounded-full transition-colors cursor-pointer ${
-                  i === current ? "bg-violet-600" : answers[questions[i]?.id] ? "bg-violet-300" : "bg-gray-200"
+                  i === current ? "bg-violet-600" : answers[questions[i]?.id] ? "bg-violet-300 dark:bg-violet-500" : "bg-gray-200 dark:bg-gray-600"
                 }`}
               />
             ))}
