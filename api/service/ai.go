@@ -118,6 +118,7 @@ func (s *AIService) callGroq(prompt string) (*AIResult, error) {
 	body := map[string]any{
 		"model": "llama-3.3-70b-versatile",
 		"messages": []map[string]string{
+			{"role": "system", "content": "You are a JSON generator. You MUST return only valid JSON. Every opening { must have a matching }. Every opening [ must have a matching ]. Never use ] to close an object that was opened with {."},
 			{"role": "user", "content": prompt},
 		},
 		"temperature":     0.7,
@@ -177,8 +178,20 @@ func parseAIResponse(text string) (*AIResult, error) {
 
 	var result AIResult
 	if err := json.Unmarshal([]byte(text), &result); err != nil {
-		return nil, fmt.Errorf("failed to parse AI JSON: %w\nraw: %s", err, text[:min(len(text), 500)])
+		// Try to repair common JSON issues from LLMs
+		repaired := repairJSON(text)
+		if err2 := json.Unmarshal([]byte(repaired), &result); err2 != nil {
+			return nil, fmt.Errorf("failed to parse AI JSON: %w\nraw: %s", err, text[:min(len(text), 500)])
+		}
 	}
 
 	return &result, nil
+}
+
+func repairJSON(text string) string {
+	// Fix common LLM mistake: "] instead of "} to close objects
+	text = strings.ReplaceAll(text, "\"]", "\"}")
+	// Fix "] with whitespace variations
+	text = strings.ReplaceAll(text, "\" ]", "\" }")
+	return text
 }
