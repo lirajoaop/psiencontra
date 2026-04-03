@@ -68,8 +68,9 @@ func (s *AIService) callGemini(prompt string) (*AIResult, error) {
 			},
 		},
 		"generationConfig": map[string]any{
-			"temperature":   0.7,
-			"maxOutputTokens": 4096,
+			"temperature":      0.7,
+			"maxOutputTokens":  8192,
+			"responseMimeType": "application/json",
 		},
 	}
 
@@ -119,8 +120,9 @@ func (s *AIService) callGroq(prompt string) (*AIResult, error) {
 		"messages": []map[string]string{
 			{"role": "user", "content": prompt},
 		},
-		"temperature":  0.7,
-		"max_tokens":   4096,
+		"temperature":     0.7,
+		"max_tokens":      8192,
+		"response_format": map[string]string{"type": "json_object"},
 	}
 
 	jsonBody, err := json.Marshal(body)

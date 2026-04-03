@@ -10,25 +10,25 @@ import (
 func BuildPrompt(responses []schemas.Response) string {
 	var sb strings.Builder
 
-	sb.WriteString(`Voce e um especialista em Psicologia com profundo conhecimento das 8 abordagens teoricas e dos 9 campos de atuacao. Analise as respostas de um estudante de Psicologia e gere um ranking de afinidade.
+	sb.WriteString(`Você é um especialista em Psicologia com profundo conhecimento das 8 abordagens teóricas e dos 9 campos de atuação. Analise as respostas de um estudante de Psicologia e gere um ranking de afinidade.
 
-As 8 abordagens teoricas sao:
-1. Psicanalise (Freud, Lacan, Winnicott)
+As 8 abordagens teóricas são:
+1. Psicanálise (Freud, Lacan, Winnicott)
 2. Fenomenologia-Existencial (Husserl, Heidegger, Rogers)
-3. Analise do Comportamento (Skinner)
+3. Análise do Comportamento (Skinner)
 4. Terapia Cognitivo-Comportamental (Beck, Ellis)
-5. Psicologia Analitica (Jung)
+5. Psicologia Analítica (Jung)
 6. Gestalt-terapia (Perls)
-7. Psicologia Socio-Historica (Vigotski)
-8. Sistemica (Bateson, Minuchin)
+7. Psicologia Sócio-Histórica (Vigotski)
+8. Sistêmica (Bateson, Minuchin)
 
-Os 9 campos de atuacao sao:
-1. Psicologia Clinica
+Os 9 campos de atuação são:
+1. Psicologia Clínica
 2. Psicologia Organizacional
 3. Psicologia Escolar/Educacional
-4. Psicologia Social e Comunitaria
-5. Psicologia da Saude/Hospitalar
-6. Psicologia Juridica
+4. Psicologia Social e Comunitária
+5. Psicologia da Saúde/Hospitalar
+6. Psicologia Jurídica
 7. Psicologia do Esporte
 8. Neuropsicologia
 9. Psicometria
@@ -46,7 +46,7 @@ Respostas do estudante:
 	}
 
 	sb.WriteString(`
-Com base nas respostas acima, gere EXCLUSIVAMENTE um JSON valido (sem markdown, sem crases, sem texto extra) no seguinte formato:
+Com base nas respostas acima, gere EXCLUSIVAMENTE um JSON válido (sem markdown, sem crases, sem texto extra) no seguinte formato:
 {
   "approach_scores": {
     "psicanalise": <0-100>,
@@ -90,14 +90,14 @@ Com base nas respostas acima, gere EXCLUSIVAMENTE um JSON valido (sem markdown, 
     "neuropsicologia": {"score": <0-100>, "description": "<2-3 frases>"},
     "psicometria": {"score": <0-100>, "description": "<2-3 frases>"}
   },
-  "summary": "<Paragrafo de 4-5 frases resumindo o perfil geral do estudante, suas inclinacoes teoricas predominantes e campos de atuacao mais alinhados>"
+  "summary": "<Parágrafo de 4-5 frases resumindo o perfil geral do estudante, suas inclinações teóricas predominantes e campos de atuação mais alinhados>"
 }
 
 REGRAS IMPORTANTES:
 - Os scores devem variar de 0 a 100 e devem ser coerentes entre si
 - Considere tanto as respostas objetivas quanto as dissertativas
-- Nas dissertativas, analise o vocabulario, as referencias e a forma de pensar
-- Gere scores diferenciados — evite empates ou scores muito proximos
+- Nas dissertativas, analise o vocabulário, as referências e a forma de pensar
+- Gere scores diferenciados — evite empates ou scores muito próximos
 - Retorne APENAS o JSON, sem nenhum texto adicional`)
 
 	return sb.String()

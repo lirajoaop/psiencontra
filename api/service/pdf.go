@@ -23,23 +23,23 @@ type scoreEntry struct {
 }
 
 var approachLabels = map[string]string{
-	"psicanalise":    "Psicanalise",
-	"fenomenologia":  "Fenomenologia-Existencial",
-	"comportamental": "Analise do Comportamento",
-	"tcc":            "Terapia Cognitivo-Comportamental",
-	"junguiana":      "Psicologia Analitica (Jung)",
-	"gestalt":        "Gestalt-terapia",
-	"socio_historica": "Psicologia Socio-Historica",
-	"sistemica":      "Sistemica",
+	"psicanalise":     "Psicanálise",
+	"fenomenologia":   "Fenomenologia-Existencial",
+	"comportamental":  "Análise do Comportamento",
+	"tcc":             "Terapia Cognitivo-Comportamental",
+	"junguiana":       "Psicologia Analítica (Jung)",
+	"gestalt":         "Gestalt-terapia",
+	"socio_historica": "Psicologia Sócio-Histórica",
+	"sistemica":       "Sistêmica",
 }
 
 var fieldLabels = map[string]string{
-	"clinica":         "Psicologia Clinica",
+	"clinica":         "Psicologia Clínica",
 	"organizacional":  "Psicologia Organizacional",
 	"escolar":         "Psicologia Escolar/Educacional",
-	"social":          "Psicologia Social e Comunitaria",
-	"saude":           "Psicologia da Saude/Hospitalar",
-	"juridica":        "Psicologia Juridica",
+	"social":          "Psicologia Social e Comunitária",
+	"saude":           "Psicologia da Saúde/Hospitalar",
+	"juridica":        "Psicologia Jurídica",
 	"esporte":         "Psicologia do Esporte",
 	"neuropsicologia": "Neuropsicologia",
 	"psicometria":     "Psicometria",
@@ -48,6 +48,7 @@ var fieldLabels = map[string]string{
 func (s *PDFService) Generate(result *schemas.Result) ([]byte, error) {
 	pdf := gofpdf.New("P", "mm", "A4", "")
 	pdf.SetAutoPageBreak(true, 20)
+	tr := pdf.UnicodeTranslatorFromDescriptor("")
 	pdf.AddPage()
 
 	// Title
@@ -56,7 +57,7 @@ func (s *PDFService) Generate(result *schemas.Result) ([]byte, error) {
 	pdf.CellFormat(0, 15, "PsiEncontra", "", 1, "C", false, 0, "")
 	pdf.SetFont("Helvetica", "", 12)
 	pdf.SetTextColor(100, 100, 100)
-	pdf.CellFormat(0, 8, "Seu Perfil de Afinidade em Psicologia", "", 1, "C", false, 0, "")
+	pdf.CellFormat(0, 8, tr("Seu Perfil de Afinidade em Psicologia"), "", 1, "C", false, 0, "")
 	pdf.Ln(10)
 
 	// Summary
@@ -65,23 +66,23 @@ func (s *PDFService) Generate(result *schemas.Result) ([]byte, error) {
 	pdf.CellFormat(0, 10, "Resumo Geral", "", 1, "L", false, 0, "")
 	pdf.SetFont("Helvetica", "", 10)
 	pdf.SetTextColor(50, 50, 50)
-	pdf.MultiCell(0, 5, result.Explanation, "", "L", false)
+	pdf.MultiCell(0, 5, tr(result.Explanation), "", "L", false)
 	pdf.Ln(8)
 
 	// Approach Scores
 	approachEntries := parseScoresWithDetails(result.ApproachScores, result.ApproachDetails, approachLabels)
-	s.renderSection(pdf, "Abordagens Teoricas", approachEntries)
+	s.renderSection(pdf, tr, tr("Abordagens Teóricas"), approachEntries)
 
 	// Field Scores
 	pdf.AddPage()
 	fieldEntries := parseScoresWithDetails(result.FieldScores, result.FieldDetails, fieldLabels)
-	s.renderSection(pdf, "Campos de Atuacao", fieldEntries)
+	s.renderSection(pdf, tr, tr("Campos de Atuação"), fieldEntries)
 
 	// Footer
 	pdf.Ln(10)
 	pdf.SetFont("Helvetica", "I", 8)
 	pdf.SetTextColor(150, 150, 150)
-	pdf.CellFormat(0, 5, "Gerado por PsiEncontra - Este resultado e apenas orientativo e nao substitui acompanhamento profissional.", "", 1, "C", false, 0, "")
+	pdf.CellFormat(0, 5, tr("Gerado por PsiEncontra - Este resultado é apenas orientativo e não substitui acompanhamento profissional."), "", 1, "C", false, 0, "")
 
 	var buf bytes.Buffer
 	if err := pdf.Output(&buf); err != nil {
@@ -91,7 +92,7 @@ func (s *PDFService) Generate(result *schemas.Result) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (s *PDFService) renderSection(pdf *gofpdf.Fpdf, title string, entries []scoreEntry) {
+func (s *PDFService) renderSection(pdf *gofpdf.Fpdf, tr func(string) string, title string, entries []scoreEntry) {
 	pdf.SetFont("Helvetica", "B", 14)
 	pdf.SetTextColor(88, 28, 135)
 	pdf.CellFormat(0, 10, title, "", 1, "L", false, 0, "")
@@ -102,7 +103,7 @@ func (s *PDFService) renderSection(pdf *gofpdf.Fpdf, title string, entries []sco
 		pdf.SetFont("Helvetica", "B", 10)
 		pdf.SetTextColor(50, 50, 50)
 		label := fmt.Sprintf("%d. %s - %d%%", i+1, e.Key, int(e.Score))
-		pdf.CellFormat(0, 7, label, "", 1, "L", false, 0, "")
+		pdf.CellFormat(0, 7, tr(label), "", 1, "L", false, 0, "")
 
 		// Bar
 		barWidth := 170.0
@@ -117,7 +118,7 @@ func (s *PDFService) renderSection(pdf *gofpdf.Fpdf, title string, entries []sco
 		if e.Desc != "" {
 			pdf.SetFont("Helvetica", "", 9)
 			pdf.SetTextColor(80, 80, 80)
-			pdf.MultiCell(0, 4, e.Desc, "", "L", false)
+			pdf.MultiCell(0, 4, tr(e.Desc), "", "L", false)
 		}
 		pdf.Ln(3)
 	}

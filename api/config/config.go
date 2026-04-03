@@ -1,6 +1,9 @@
 package config
 
-import "gorm.io/gorm"
+import (
+	"github.com/joho/godotenv"
+	"gorm.io/gorm"
+)
 
 var (
 	DB  *gorm.DB
@@ -8,6 +11,9 @@ var (
 )
 
 func Init() error {
+	// Load .env from project root (../. relative to api/)
+	_ = godotenv.Load("../.env")
+
 	Log = NewLogger()
 
 	dsn := GetEnv("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/psiencontra?sslmode=disable")
