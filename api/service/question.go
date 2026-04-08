@@ -89,7 +89,7 @@ var questions = []Question{
 	},
 	{
 		ID:    4,
-		Text:  "Qual deveria ser o papel principal do terapeuta?",
+		Text:  "Qual deveria ser o papel principal do psicoterapeuta?",
 		Type:  "multiple_choice",
 		Block: "approaches",
 		Options: []Option{
