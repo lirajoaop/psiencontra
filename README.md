@@ -25,15 +25,12 @@ The result is informative and does not replace professional guidance, but works 
 
 ## Demo
 
-<!-- Add screenshots or GIFs of the application here -->
-
 | Screen | Description |
 |---|---|
 | ![Landing Page](./docs/landing.png) | Landing page with introduction and CTA |
 | ![Questionnaire](./docs/questionnaire.png) | Multiple-choice question with answer options |
 | ![Result](./docs/result.png) | Radar charts and affinity ranking |
 
-> To add the images, take screenshots of the application and save them in the `docs/` folder of the project.
 
 ## Features
 
