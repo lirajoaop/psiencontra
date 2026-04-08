@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import ThemeToggle from "@/components/ThemeToggle";
+import UserMenu from "@/components/UserMenu";
 import { APPROACH_LABELS, APPROACH_DESCRIPTIONS, APPROACH_COLORS } from "@/lib/constants";
 
 export default function Home() {
@@ -20,7 +21,8 @@ export default function Home() {
     <main className="flex-1">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-violet-600 via-violet-700 to-purple-800 text-white">
-        <div className="absolute top-4 right-4 z-20">
+        <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
+          <UserMenu />
           <ThemeToggle />
         </div>
         <div className="max-w-5xl mx-auto px-6 py-24 md:py-32 text-center relative z-10">

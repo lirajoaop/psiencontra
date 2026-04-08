@@ -12,6 +12,7 @@ type Session struct {
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	UserID    *uuid.UUID     `gorm:"type:uuid;index" json:"user_id,omitempty"`
 	Responses []Response     `gorm:"foreignKey:SessionID" json:"responses,omitempty"`
 	Result    *Result        `gorm:"foreignKey:SessionID" json:"result,omitempty"`
 }

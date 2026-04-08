@@ -9,7 +9,11 @@ import (
 )
 
 func CreateSession(c *gin.Context) {
-	session, err := SessionSvc.CreateSession()
+	var userID *uuid.UUID
+	if id, ok := UserIDFromContext(c); ok {
+		userID = &id
+	}
+	session, err := SessionSvc.CreateSession(userID)
 	if err != nil {
 		sendError(c, http.StatusInternalServerError, "failed to create session")
 		return

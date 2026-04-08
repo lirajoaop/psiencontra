@@ -33,8 +33,8 @@ func NewSessionService(
 	}
 }
 
-func (s *SessionService) CreateSession() (*schemas.Session, error) {
-	session := &schemas.Session{}
+func (s *SessionService) CreateSession(userID *uuid.UUID) (*schemas.Session, error) {
+	session := &schemas.Session{UserID: userID}
 	if err := s.sessionRepo.Create(session); err != nil {
 		return nil, err
 	}

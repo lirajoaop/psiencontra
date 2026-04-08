@@ -1,6 +1,6 @@
 "use client";
 
-export default function Button({ children, onClick, variant = "primary", disabled = false, className = "" }) {
+export default function Button({ children, onClick, variant = "primary", disabled = false, className = "", type = "button" }) {
   const base = "px-6 py-3 rounded-xl font-semibold transition-all duration-200 cursor-pointer text-center";
   const variants = {
     primary: "bg-violet-600 text-white hover:bg-violet-700 shadow-lg shadow-violet-200 hover:shadow-violet-300 dark:shadow-violet-900/50 dark:hover:shadow-violet-800/50",
@@ -10,6 +10,7 @@ export default function Button({ children, onClick, variant = "primary", disable
 
   return (
     <button
+      type={type}
       onClick={onClick}
       disabled={disabled}
       className={`${base} ${variants[variant]} ${disabled ? "opacity-50 cursor-not-allowed" : ""} ${className}`}

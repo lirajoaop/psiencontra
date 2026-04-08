@@ -12,7 +12,8 @@ func New() *gin.Engine {
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{config.GetEnv("FRONTEND_URL", "http://localhost:3000")},
 		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Disposition"},
 		AllowCredentials: true,
 	}))
 
