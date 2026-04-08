@@ -104,16 +104,21 @@ func Me(c *gin.Context) {
 }
 
 // GoogleStart begins the OAuth dance: stores a CSRF state cookie and
-// redirects to Google.
+// redirects to Google. Errors here redirect back to the frontend callback
+// with an error code instead of returning JSON, because the browser reaches
+// this endpoint via a full-page navigation — a JSON body would render as a
+// raw error page with no way back into the app.
 func GoogleStart(c *gin.Context) {
+	frontendURL := config.GetEnv("FRONTEND_URL", "http://localhost:3000")
+
 	if !GoogleOAuthSvc.Enabled() {
-		sendError(c, http.StatusServiceUnavailable, "google login not configured")
+		redirectWithError(c, frontendURL, "google_disabled")
 		return
 	}
 
 	state, err := service.GenerateState()
 	if err != nil {
-		sendError(c, http.StatusInternalServerError, "failed to start oauth")
+		redirectWithError(c, frontendURL, "state_generation_failed")
 		return
 	}
 	setStateCookie(c, state)

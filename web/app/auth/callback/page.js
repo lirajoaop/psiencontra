@@ -12,6 +12,7 @@ const ERROR_MESSAGES = {
   user_upsert_failed: "Erro ao criar sua conta. Tente novamente.",
   google_disabled: "Login com Google não está configurado.",
   missing_code: "Resposta do Google incompleta.",
+  state_generation_failed: "Não foi possível iniciar o login. Tente novamente.",
 };
 
 export default function AuthCallback() {
