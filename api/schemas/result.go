@@ -2,13 +2,17 @@ package schemas
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Result struct {
-	gorm.Model
+	ID              uint            `gorm:"primaryKey" json:"id"`
+	CreatedAt       time.Time       `json:"created_at"`
+	UpdatedAt       time.Time       `json:"updated_at"`
+	DeletedAt       gorm.DeletedAt  `gorm:"index" json:"-"`
 	SessionID       uuid.UUID       `gorm:"type:uuid;uniqueIndex" json:"session_id"`
 	ApproachScores  json.RawMessage `gorm:"type:jsonb" json:"approach_scores"`
 	FieldScores     json.RawMessage `gorm:"type:jsonb" json:"field_scores"`
