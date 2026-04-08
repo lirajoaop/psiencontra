@@ -22,6 +22,7 @@ var (
 	ErrEmailAlreadyUsed   = errors.New("email already in use")
 	ErrInvalidCredentials = errors.New("invalid credentials")
 	ErrPasswordRequired   = errors.New("password required")
+	ErrPasswordTooShort   = errors.New("password must be at least 8 characters")
 	ErrEmailRequired      = errors.New("email required")
 )
 
@@ -60,7 +61,7 @@ func (s *AuthService) Register(email, password, name string) (*schemas.User, str
 		return nil, "", ErrEmailRequired
 	}
 	if len(password) < 8 {
-		return nil, "", errors.New("password must be at least 8 characters")
+		return nil, "", ErrPasswordTooShort
 	}
 
 	if existing, err := s.userRepo.FindByEmail(email); err == nil && existing != nil {

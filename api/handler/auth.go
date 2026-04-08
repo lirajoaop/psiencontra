@@ -42,8 +42,15 @@ func Register(c *gin.Context) {
 			sendError(c, http.StatusConflict, "email already in use")
 		case errors.Is(err, service.ErrEmailRequired):
 			sendError(c, http.StatusBadRequest, "email required")
+		case errors.Is(err, service.ErrPasswordTooShort):
+			sendError(c, http.StatusBadRequest, "password must be at least 8 characters")
 		default:
-			sendError(c, http.StatusBadRequest, err.Error())
+			// Unexpected: DB error, bcrypt failure, JWT signing failure, etc.
+			// Log the real cause server-side and return a generic 500 so we
+			// don't leak internal details (DB driver messages, stack hints,
+			// secret-related errors) to the client.
+			config.Log.Error.Printf("register failed: %v", err)
+			sendError(c, http.StatusInternalServerError, "registration failed")
 		}
 		return
 	}
@@ -65,6 +72,7 @@ func Login(c *gin.Context) {
 			sendError(c, http.StatusUnauthorized, "invalid credentials")
 			return
 		}
+		config.Log.Error.Printf("login failed: %v", err)
 		sendError(c, http.StatusInternalServerError, "login failed")
 		return
 	}

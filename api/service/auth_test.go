@@ -163,8 +163,8 @@ func TestRegister_DuplicateEmail(t *testing.T) {
 func TestRegister_ShortPassword(t *testing.T) {
 	svc, _ := newTestService()
 	_, _, err := svc.Register("short@example.com", "1234567", "")
-	if err == nil {
-		t.Fatal("expected error for short password")
+	if !errors.Is(err, ErrPasswordTooShort) {
+		t.Fatalf("expected ErrPasswordTooShort, got %v", err)
 	}
 }
 
