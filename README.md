@@ -1,194 +1,194 @@
 # PsiEncontra
 
-Plataforma web que ajuda estudantes de Psicologia a descobrirem qual abordagem teorica e campo de atuacao mais combinam com seu perfil. Atraves de um questionario interativo com analise por inteligencia artificial, o estudante recebe um ranking personalizado de afinidade com graficos, explicacoes detalhadas e exportacao em PDF.
+A web platform that helps Psychology students discover which theoretical approach and field of practice best match their profile. Through an interactive questionnaire analyzed by artificial intelligence, the student receives a personalized affinity ranking with charts, detailed explanations and PDF export.
 
-> Acesse a aplicacao: [psiencontra.vercel.app](https://psiencontra.vercel.app)
+> Live app: [psiencontra.vercel.app](https://psiencontra.vercel.app)
 
 ---
 
-## O Problema
+## The Problem
 
-Estudantes de Psicologia, especialmente nos primeiros semestres, se deparam com uma grande variedade de abordagens teoricas (Psicanalise, TCC, Gestalt, Fenomenologia, entre outras) e campos de atuacao (Clinica, Organizacional, Escolar, Juridica, etc.). Essa diversidade, embora rica, pode gerar duvidas e inseguranca sobre qual caminho seguir na carreira. Faltam ferramentas praticas que ajudem o estudante a refletir sobre suas proprias inclinacoes de forma guiada e personalizada.
+Psychology students, especially in their first semesters, are confronted with a wide variety of theoretical approaches (Psychoanalysis, CBT, Gestalt, Phenomenology, among others) and fields of practice (Clinical, Organizational, School, Forensic, etc.). This diversity, while rich, can generate doubts and insecurity about which path to follow in their career. There is a lack of practical tools that help students reflect on their own inclinations in a guided and personalized way.
 
-## A Solucao
+## The Solution
 
-O PsiEncontra resolve esse problema oferecendo um questionario com 15 perguntas — entre objetivas e dissertativas — que exploram a visao do estudante sobre temas como sofrimento humano, metodos terapeuticos, contextos de atuacao e papel do psicologo. As respostas sao enviadas para uma IA (Google Gemini ou Groq Llama) que analisa o vocabulario, as referencias e a forma de pensar do estudante, gerando:
+PsiEncontra solves this problem by offering a 15-question questionnaire — combining multiple-choice and open-ended questions — that explores the student's view on topics such as human suffering, therapeutic methods, contexts of practice and the role of the psychologist. The answers are sent to an AI (Google Gemini or Groq Llama) that analyzes the student's vocabulary, references and way of thinking, generating:
 
-- Um **ranking de afinidade** com 8 abordagens teoricas (de 0 a 100)
-- Um **ranking de afinidade** com 9 campos de atuacao (de 0 a 100)
-- **Graficos radar** para visualizacao intuitiva
-- **Explicacoes detalhadas** sobre cada pontuacao
-- Um **resumo geral** do perfil do estudante
-- **Exportacao em PDF** do resultado completo
+- An **affinity ranking** with 8 theoretical approaches (from 0 to 100)
+- An **affinity ranking** with 9 fields of practice (from 0 to 100)
+- **Radar charts** for intuitive visualization
+- **Detailed explanations** for each score
+- A **general summary** of the student's profile
+- **PDF export** of the complete result
 
-O resultado e orientativo e nao substitui acompanhamento profissional, mas funciona como uma ferramenta de autoconhecimento e reflexao para o estudante.
+The result is informative and does not replace professional guidance, but works as a self-knowledge and reflection tool for the student.
 
-## Demonstracao
+## Demo
 
-<!-- Adicione prints ou GIFs da aplicacao aqui -->
+<!-- Add screenshots or GIFs of the application here -->
 
-| Tela | Descricao |
+| Screen | Description |
 |---|---|
-| ![Landing Page](./docs/landing.png) | Pagina inicial com apresentacao e CTA |
-| ![Questionario](./docs/questionario.png) | Pergunta objetiva com opcoes de resposta |
-| ![Resultado](./docs/resultado.png) | Graficos radar e ranking de afinidade |
+| ![Landing Page](./docs/landing.png) | Landing page with introduction and CTA |
+| ![Questionnaire](./docs/questionario.png) | Multiple-choice question with answer options |
+| ![Result](./docs/resultado.png) | Radar charts and affinity ranking |
 
-> Para adicionar as imagens, tire prints da aplicacao e salve na pasta `docs/` do projeto.
+> To add the images, take screenshots of the application and save them in the `docs/` folder of the project.
 
-## Funcionalidades
+## Features
 
-- Questionario interativo com 15 perguntas divididas em blocos tematicos
-- Perguntas objetivas (multipla escolha) e dissertativas (texto livre)
-- Analise por IA com fallback automatico (Gemini -> Groq)
-- Ranking de afinidade com 8 abordagens teoricas e 9 campos de atuacao
-- Graficos radar interativos para visualizacao dos resultados
-- Explicacoes personalizadas para cada abordagem e campo
-- Exportacao do resultado completo em PDF
-- Dark mode com persistencia via localStorage
-- Design responsivo para desktop e mobile
-- Animacoes suaves com Framer Motion
+- Interactive questionnaire with 15 questions divided into thematic blocks
+- Multiple-choice and open-ended questions
+- AI analysis with automatic fallback (Gemini -> Groq)
+- Affinity ranking with 8 theoretical approaches and 9 fields of practice
+- Interactive radar charts for visualizing the results
+- Personalized explanations for each approach and field
+- Full result export to PDF
+- Dark mode with persistence via localStorage
+- Responsive design for desktop and mobile
+- Smooth animations with Framer Motion
 
-## Abordagens Teoricas Avaliadas
+## Theoretical Approaches Evaluated
 
-| Abordagem | Principais Autores |
+| Approach | Main Authors |
 |---|---|
-| Psicanalise | Freud, Lacan, Winnicott |
-| Fenomenologia-Existencial | Husserl, Heidegger, Rogers |
-| Analise do Comportamento | Skinner |
-| Terapia Cognitivo-Comportamental | Beck, Ellis |
-| Psicologia Analitica | Jung |
-| Gestalt-terapia | Perls |
-| Psicologia Socio-Historica | Vigotski |
-| Sistemica | Bateson, Minuchin |
+| Psychoanalysis | Freud, Lacan, Winnicott |
+| Existential-Phenomenology | Husserl, Heidegger, Rogers |
+| Behavior Analysis | Skinner |
+| Cognitive Behavioral Therapy | Beck, Ellis |
+| Analytical Psychology | Jung |
+| Gestalt Therapy | Perls |
+| Socio-Historical Psychology | Vygotsky |
+| Systemic | Bateson, Minuchin |
 
-## Campos de Atuacao Avaliados
+## Fields of Practice Evaluated
 
-Psicologia Clinica, Organizacional, Escolar/Educacional, Social e Comunitaria, da Saude/Hospitalar, Juridica, do Esporte, Neuropsicologia e Psicometria.
+Clinical Psychology, Organizational, School/Educational, Social and Community, Health/Hospital, Forensic, Sports, Neuropsychology and Psychometrics.
 
-## Tecnologias Utilizadas
+## Tech Stack
 
 ### Frontend
-- **Next.js 16** — Framework React com App Router e renderizacao server-side
-- **React 19** — Biblioteca para construcao de interfaces
-- **Tailwind CSS 4** — Estilizacao utilitaria com suporte a dark mode
-- **Framer Motion** — Animacoes e transicoes fluidas
-- **Recharts** — Graficos radar interativos para visualizacao dos resultados
+- **Next.js 16** — React framework with App Router and server-side rendering
+- **React 19** — Library for building user interfaces
+- **Tailwind CSS 4** — Utility-first styling with dark mode support
+- **Framer Motion** — Smooth animations and transitions
+- **Recharts** — Interactive radar charts for visualizing results
 
 ### Backend
-- **Go** — Linguagem do servidor, escolhida pela performance e simplicidade
-- **Gin** — Framework HTTP leve e rapido
-- **GORM** — ORM para comunicacao com PostgreSQL
-- **gofpdf** — Geracao de documentos PDF com suporte a UTF-8
-- **godotenv** — Carregamento de variaveis de ambiente
+- **Go** — Server language, chosen for its performance and simplicity
+- **Gin** — Lightweight and fast HTTP framework
+- **GORM** — ORM for communication with PostgreSQL
+- **gofpdf** — PDF document generation with UTF-8 support
+- **godotenv** — Loading of environment variables
 
-### IA
-- **Google Gemini 2.0 Flash** — Provedor primario de analise
-- **Groq Llama 3.3 70B** — Provedor de fallback
+### AI
+- **Google Gemini 2.0 Flash** — Primary analysis provider
+- **Groq Llama 3.3 70B** — Fallback provider
 
-### Infraestrutura
-- **PostgreSQL** — Banco de dados relacional
-- **Docker** — Containerizacao para desenvolvimento local
-- **Vercel** — Deploy do frontend
-- **Railway** — Deploy da API e banco de dados
+### Infrastructure
+- **PostgreSQL** — Relational database
+- **Docker** — Containerization for local development
+- **Vercel** — Frontend deployment
+- **Railway** — API and database deployment
 
-## Arquitetura do Projeto
+## Project Architecture
 
-O projeto segue uma arquitetura monorepo com separacao clara entre frontend e backend:
+The project follows a monorepo architecture with a clear separation between frontend and backend:
 
 ```
 psiencontra/
-├── api/                        # Backend Go
-│   ├── config/                 # Configuracao (banco, env, logger)
-│   ├── handler/                # Controllers HTTP (rotas)
-│   ├── repository/             # Camada de acesso a dados (queries)
-│   ├── router/                 # Definicao de rotas e CORS
-│   ├── schemas/                # Modelos de dados (structs)
-│   ├── service/                # Logica de negocio (IA, PDF, perguntas)
-│   ├── Dockerfile              # Build da imagem Docker
-│   ├── main.go                 # Ponto de entrada da API
-│   └── go.mod                  # Dependencias Go
-├── web/                        # Frontend Next.js
-│   ├── app/                    # Paginas (landing, questionario, resultado)
-│   ├── components/             # Componentes reutilizaveis (Button, Card, etc.)
-│   ├── lib/                    # API client e constantes
-│   └── package.json            # Dependencias Node.js
-├── docker-compose.yml          # Orquestracao local (PostgreSQL + API)
-├── .env.example                # Modelo de variaveis de ambiente
+├── api/                        # Go backend
+│   ├── config/                 # Configuration (database, env, logger)
+│   ├── handler/                # HTTP controllers (routes)
+│   ├── repository/             # Data access layer (queries)
+│   ├── router/                 # Route definitions and CORS
+│   ├── schemas/                # Data models (structs)
+│   ├── service/                # Business logic (AI, PDF, questions)
+│   ├── Dockerfile              # Docker image build
+│   ├── main.go                 # API entry point
+│   └── go.mod                  # Go dependencies
+├── web/                        # Next.js frontend
+│   ├── app/                    # Pages (landing, questionnaire, result)
+│   ├── components/             # Reusable components (Button, Card, etc.)
+│   ├── lib/                    # API client and constants
+│   └── package.json            # Node.js dependencies
+├── docker-compose.yml          # Local orchestration (PostgreSQL + API)
+├── .env.example                # Environment variables template
 └── README.md
 ```
 
-### Fluxo da Aplicacao
+### Application Flow
 
 ```
-Estudante acessa o site
+Student visits the site
         |
-Clica em "Comecar Questionario"
+Clicks "Start Questionnaire"
         |
-Responde 15 perguntas (objetivas + dissertativas)
+Answers 15 questions (multiple-choice + open-ended)
         |
-Frontend envia respostas para a API
+Frontend sends answers to the API
         |
-API monta o prompt e envia para a IA (Gemini ou Groq)
+API builds the prompt and sends it to the AI (Gemini or Groq)
         |
-IA retorna JSON com scores e descricoes
+AI returns JSON with scores and descriptions
         |
-API salva o resultado no banco e retorna ao frontend
+API saves the result in the database and returns it to the frontend
         |
-Frontend exibe graficos radar, ranking e explicacoes
+Frontend displays radar charts, ranking and explanations
         |
-Estudante pode exportar o resultado em PDF
+Student can export the result as a PDF
 ```
 
-## Como Executar o Projeto
+## How to Run the Project
 
-### Pre-requisitos
+### Prerequisites
 
 - [Go 1.25+](https://go.dev/dl/)
 - [Node.js 18+](https://nodejs.org/)
-- [Docker](https://www.docker.com/) (para o PostgreSQL)
-- Chave de API do [Google Gemini](https://aistudio.google.com/apikey) e/ou [Groq](https://console.groq.com/)
+- [Docker](https://www.docker.com/) (for PostgreSQL)
+- An API key from [Google Gemini](https://aistudio.google.com/apikey) and/or [Groq](https://console.groq.com/)
 
-### 1. Clone o repositorio
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/lirajoaop/psiencontra.git
 cd psiencontra
 ```
 
-### 2. Configure as variaveis de ambiente
+### 2. Configure environment variables
 
 ```bash
 cp .env.example .env
 ```
 
-Edite o `.env` com suas chaves:
+Edit `.env` with your keys:
 
 ```env
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/psiencontra?sslmode=disable
-GEMINI_API_KEY=sua_chave_gemini
-GROQ_API_KEY=sua_chave_groq
+GEMINI_API_KEY=your_gemini_key
+GROQ_API_KEY=your_groq_key
 PORT=8080
 FRONTEND_URL=http://localhost:3000
 ```
 
-### 3. Suba o banco de dados
+### 3. Start the database
 
 ```bash
 docker compose up -d postgres
 ```
 
-### 4. Inicie a API
+### 4. Start the API
 
 ```bash
 cd api
 go run .
 ```
 
-A API estara disponivel em `http://localhost:8080`.
+The API will be available at `http://localhost:8080`.
 
-### 5. Inicie o frontend
+### 5. Start the frontend
 
-Em outro terminal:
+In another terminal:
 
 ```bash
 cd web
@@ -196,36 +196,36 @@ npm install
 npm run dev
 ```
 
-O frontend estara disponivel em `http://localhost:3000`.
+The frontend will be available at `http://localhost:3000`.
 
-## Deploy em Producao
+## Production Deployment
 
-| Servico | Plataforma | URL |
+| Service | Platform | URL |
 |---|---|---|
 | Frontend | Vercel | [psiencontra.vercel.app](https://psiencontra.vercel.app) |
-| API + Banco | Railway | psiencontra-production.up.railway.app |
+| API + Database | Railway | psiencontra-production.up.railway.app |
 
-### Variaveis de ambiente
+### Environment variables
 
 **Vercel (frontend):**
-- `NEXT_PUBLIC_API_URL` — URL da API + `/api/v1`
+- `NEXT_PUBLIC_API_URL` — API URL + `/api/v1`
 
 **Railway (API):**
-- `DATABASE_URL` — fornecida automaticamente pelo PostgreSQL do Railway
-- `GEMINI_API_KEY` — chave da API do Google Gemini
-- `GROQ_API_KEY` — chave da API do Groq
-- `FRONTEND_URL` — URL do frontend na Vercel
+- `DATABASE_URL` — provided automatically by Railway's PostgreSQL
+- `GEMINI_API_KEY` — Google Gemini API key
+- `GROQ_API_KEY` — Groq API key
+- `FRONTEND_URL` — frontend URL on Vercel
 - `PORT` — 8080
 
-## Aprendizados
+## Lessons Learned
 
-Durante o desenvolvimento deste projeto, os principais aprendizados foram:
+While building this project, the main takeaways were:
 
-- **Integracao com IAs generativas**: como montar prompts eficientes para obter respostas em JSON estruturado, lidar com limites de tokens e implementar fallback entre provedores diferentes
-- **Arquitetura fullstack**: separacao de responsabilidades entre frontend (React/Next.js) e backend (Go/Gin), comunicacao via REST API e gerenciamento de estado
-- **Deploy de aplicacoes distribuidas**: configurar e conectar servicos em plataformas diferentes (Vercel + Railway), gerenciar variaveis de ambiente e lidar com CORS em producao
-- **UX e acessibilidade**: implementacao de dark mode, animacoes suaves, design responsivo e feedback visual durante carregamento
+- **Integration with generative AIs**: how to craft efficient prompts to obtain structured JSON responses, deal with token limits and implement fallback between different providers
+- **Fullstack architecture**: separation of responsibilities between frontend (React/Next.js) and backend (Go/Gin), communication via REST API and state management
+- **Deploying distributed applications**: configuring and connecting services across different platforms (Vercel + Railway), managing environment variables and handling CORS in production
+- **UX and accessibility**: dark mode, smooth animations, responsive design and visual feedback during loading
 
-## Licenca
+## License
 
-Este projeto e de uso academico e educacional. Resultado orientativo, nao substitui acompanhamento profissional.
+This project is for academic and educational use. The result is informative and does not replace professional guidance.

@@ -26,10 +26,10 @@ func (s *QuestionService) GetAll() []Question {
 	return questions
 }
 
-// GetAllShuffled retorna uma cópia das perguntas com as opções de cada
-// pergunta de múltipla escolha embaralhadas. Isso evita que o usuário
-// associe sempre o mesmo índice à mesma abordagem (ex.: índice 0 sempre
-// psicanálise), o que enviesava as respostas.
+// GetAllShuffled returns a copy of the questions with the options of each
+// multiple-choice question shuffled. This prevents users from associating
+// the same index with the same approach (e.g. index 0 always being
+// psychoanalysis), which would bias their answers.
 func (s *QuestionService) GetAllShuffled() []Question {
 	shuffled := make([]Question, len(questions))
 	for i, q := range questions {
@@ -48,7 +48,7 @@ func (s *QuestionService) GetAllShuffled() []Question {
 }
 
 var questions = []Question{
-	// ===== BLOCO 1: ABORDAGENS TEÓRICAS (10 perguntas) =====
+	// ===== BLOCK 1: THEORETICAL APPROACHES (10 questions) =====
 	{
 		ID:    1,
 		Text:  "Na sua opinião, qual é a principal causa do sofrimento humano?",
@@ -169,7 +169,7 @@ var questions = []Question{
 		Type:  "open_ended",
 		Block: "approaches",
 	},
-	// ===== BLOCO 2: CAMPOS DE ATUAÇÃO (5 perguntas) =====
+	// ===== BLOCK 2: FIELDS OF PRACTICE (5 questions) =====
 	{
 		ID:    11,
 		Text:  "Com qual público você mais gostaria de trabalhar?",
