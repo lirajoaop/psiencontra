@@ -30,8 +30,8 @@ The result is informative and does not replace professional guidance, but works 
 | Screen | Description |
 |---|---|
 | ![Landing Page](./docs/landing.png) | Landing page with introduction and CTA |
-| ![Questionnaire](./docs/questionario.png) | Multiple-choice question with answer options |
-| ![Result](./docs/resultado.png) | Radar charts and affinity ranking |
+| ![Questionnaire](./docs/questionnaire.png) | Multiple-choice question with answer options |
+| ![Result](./docs/result.png) | Radar charts and affinity ranking |
 
 > To add the images, take screenshots of the application and save them in the `docs/` folder of the project.
 
