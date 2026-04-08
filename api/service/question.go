@@ -1,5 +1,7 @@
 package service
 
+import "math/rand/v2"
+
 type Option struct {
 	Label   string `json:"label"`
 	Value   string `json:"value"`
@@ -22,6 +24,27 @@ func NewQuestionService() *QuestionService {
 
 func (s *QuestionService) GetAll() []Question {
 	return questions
+}
+
+// GetAllShuffled retorna uma cópia das perguntas com as opções de cada
+// pergunta de múltipla escolha embaralhadas. Isso evita que o usuário
+// associe sempre o mesmo índice à mesma abordagem (ex.: índice 0 sempre
+// psicanálise), o que enviesava as respostas.
+func (s *QuestionService) GetAllShuffled() []Question {
+	shuffled := make([]Question, len(questions))
+	for i, q := range questions {
+		copyQ := q
+		if len(q.Options) > 0 {
+			opts := make([]Option, len(q.Options))
+			copy(opts, q.Options)
+			rand.Shuffle(len(opts), func(a, b int) {
+				opts[a], opts[b] = opts[b], opts[a]
+			})
+			copyQ.Options = opts
+		}
+		shuffled[i] = copyQ
+	}
+	return shuffled
 }
 
 var questions = []Question{
