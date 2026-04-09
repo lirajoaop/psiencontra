@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Button from "@/components/Button";
 import { useAuth } from "@/components/AuthProvider";
-import { setToken } from "@/lib/auth-token";
+import { getToken, setToken } from "@/lib/auth-token";
 
 const ERROR_MESSAGES = {
   invalid_state: "Sessão de login expirada ou inválida. Tente novamente.",
@@ -22,8 +22,17 @@ export default function AuthCallback() {
   const params = useSearchParams();
   const { refresh } = useAuth();
   const [error, setError] = useState(null);
+  // React 19 + Strict Mode runs effects twice on mount in development. Our
+  // effect mutates global state (URL fragment, localStorage), so without
+  // this guard the second run sees an already-cleaned hash, falls into the
+  // "no_token" branch, and flashes an error before the first run's
+  // redirect lands. The ref survives across the double-invoke.
+  const handled = useRef(false);
 
   useEffect(() => {
+    if (handled.current) return;
+    handled.current = true;
+
     const errCode = params.get("error");
     if (errCode) {
       setError(ERROR_MESSAGES[errCode] || "Falha ao entrar com Google.");
@@ -39,7 +48,14 @@ export default function AuthCallback() {
     const hashParams = new URLSearchParams(hash);
     const token = hashParams.get("token");
 
+    // If there's no token in the fragment, we may already be authenticated
+    // from a prior tab (Strict Mode double-mount, browser back/forward, etc).
+    // Trust the existing localStorage token instead of flashing an error.
     if (!token) {
+      if (getToken()) {
+        refresh().then(() => router.push("/"));
+        return;
+      }
       setError(ERROR_MESSAGES.no_token);
       return;
     }
