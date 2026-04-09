@@ -201,8 +201,17 @@ func clearStateCookie(c *gin.Context) {
 // writeCookie writes a cross-site capable cookie. In production we need
 // SameSite=None + Secure so the browser sends the cookie on cross-origin
 // requests from the Vercel frontend to the Railway API.
+//
+// Default policy mirrors the JWT_SECRET pattern: prod-safe by default,
+// only relaxed for explicit dev mode. Local HTTP dev must run with
+// APP_ENV=development (or COOKIE_SECURE=false), otherwise the browser
+// rejects Secure cookies over plain HTTP and login silently fails.
+// An explicit COOKIE_SECURE env always wins for edge cases.
 func writeCookie(c *gin.Context, name, value string, maxAge int) {
-	secure := config.GetEnv("COOKIE_SECURE", "true") == "true"
+	secure := config.GetEnv("APP_ENV", "") != "development"
+	if v := config.GetEnv("COOKIE_SECURE", ""); v != "" {
+		secure = v == "true"
+	}
 	sameSite := http.SameSiteNoneMode
 	if !secure {
 		// Local dev over plain HTTP: browsers reject SameSite=None without Secure.
