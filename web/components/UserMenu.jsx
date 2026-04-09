@@ -21,9 +21,13 @@ export default function UserMenu() {
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
-  if (loading) return null;
-
-  if (!user) {
+  // Render the "Entrar" button optimistically while the initial /auth/me
+  // round-trip is in flight. Anonymous visitors (the common case on a
+  // public landing page) see the CTA instantly instead of waiting for a
+  // cold-started backend. Authenticated returning users briefly see
+  // "Entrar" and then the avatar swaps in — a one-off micro-flash that's
+  // preferable to showing nothing for several seconds.
+  if (loading || !user) {
     return (
       <button
         onClick={() => router.push("/login")}
