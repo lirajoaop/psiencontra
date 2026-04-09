@@ -25,7 +25,11 @@ export default function LoginPage() {
       await login({ email, password });
       router.push("/");
     } catch (err) {
-      setError(err.message || "Falha ao entrar");
+      if (err.status === 401) {
+        setError("E-mail ou senha incorretos.");
+      } else {
+        setError("Não foi possível entrar. Tente novamente.");
+      }
     } finally {
       setSubmitting(false);
     }
