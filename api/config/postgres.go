@@ -16,6 +16,7 @@ func NewDB(dsn string) (*gorm.DB, error) {
 	}
 
 	if err := db.AutoMigrate(
+		&schemas.User{},
 		&schemas.Session{},
 		&schemas.Response{},
 		&schemas.Result{},
