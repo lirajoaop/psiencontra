@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -16,6 +16,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Clear the error banner when both fields are emptied. Using an effect
+  // (instead of patching each onChange) catches every clearing path:
+  // backspace, select+delete, paste of an empty string, form reset, etc.
+  useEffect(() => {
+    if (email === "" && password === "") {
+      setError(null);
+    }
+  }, [email, password]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
