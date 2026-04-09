@@ -1,10 +1,25 @@
+import { getToken } from "@/lib/auth-token";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 
 async function request(path, options = {}) {
+  // Build headers in a single object so callers passing custom headers in
+  // `options` still get the auth token automatically. The Bearer token is the
+  // primary auth path; we keep `credentials: include` only as a redundant
+  // path for browsers that still allow cross-site cookies.
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {}),
+  };
+  const token = getToken();
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   const res = await fetch(`${API_URL}${path}`, {
-    headers: { "Content-Type": "application/json" },
     credentials: "include",
     ...options,
+    headers,
   });
 
   if (!res.ok) {

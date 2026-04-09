@@ -60,7 +60,11 @@ func Register(c *gin.Context) {
 	}
 
 	setAuthCookie(c, token)
-	sendSuccess(c, gin.H{"user": user})
+	// We return the token in the JSON body in addition to the cookie so that
+	// browser clients which can't rely on cross-site cookies (Safari, mobile
+	// WebKit, incognito modes) can store it in localStorage and send it as a
+	// Bearer header. The cookie path keeps working for clients that allow it.
+	sendSuccess(c, gin.H{"user": user, "token": token})
 }
 
 func Login(c *gin.Context) {
@@ -82,7 +86,7 @@ func Login(c *gin.Context) {
 	}
 
 	setAuthCookie(c, token)
-	sendSuccess(c, gin.H{"user": user})
+	sendSuccess(c, gin.H{"user": user, "token": token})
 }
 
 func Logout(c *gin.Context) {
@@ -180,7 +184,17 @@ func GoogleCallback(c *gin.Context) {
 	}
 
 	setAuthCookie(c, token)
-	c.Redirect(http.StatusTemporaryRedirect, frontendURL+"/auth/callback?ok=1")
+	// Pass the token to the SPA via the URL fragment (#token=...). Hash
+	// fragments are NOT sent to servers, so the JWT never appears in any
+	// access log along the redirect chain — only the browser sees it. The
+	// frontend reads it from window.location.hash, persists to localStorage,
+	// then strips the fragment so it doesn't linger in history.
+	//
+	// Why we still set the cookie above: clients on browsers that allow
+	// cross-site cookies (Chrome desktop today) keep working through the
+	// cookie path. The Bearer/localStorage path is the fallback that works
+	// for everyone, including Safari and incognito modes.
+	c.Redirect(http.StatusTemporaryRedirect, frontendURL+"/auth/callback#token="+url.QueryEscape(token))
 }
 
 // --- helpers ---

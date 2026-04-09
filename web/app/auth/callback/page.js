@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Button from "@/components/Button";
 import { useAuth } from "@/components/AuthProvider";
+import { setToken } from "@/lib/auth-token";
 
 const ERROR_MESSAGES = {
   invalid_state: "Sessão de login expirada ou inválida. Tente novamente.",
@@ -13,6 +14,7 @@ const ERROR_MESSAGES = {
   google_disabled: "Login com Google não está configurado.",
   missing_code: "Resposta do Google incompleta.",
   state_generation_failed: "Não foi possível iniciar o login. Tente novamente.",
+  no_token: "Resposta de autenticação incompleta. Tente novamente.",
 };
 
 export default function AuthCallback() {
@@ -27,6 +29,26 @@ export default function AuthCallback() {
       setError(ERROR_MESSAGES[errCode] || "Falha ao entrar com Google.");
       return;
     }
+
+    // The backend returns the JWT in the URL fragment (#token=...). Hash
+    // fragments aren't sent to servers, so the token never lands in any
+    // access log along the redirect chain — only this browser sees it.
+    const hash = window.location.hash.startsWith("#")
+      ? window.location.hash.slice(1)
+      : window.location.hash;
+    const hashParams = new URLSearchParams(hash);
+    const token = hashParams.get("token");
+
+    if (!token) {
+      setError(ERROR_MESSAGES.no_token);
+      return;
+    }
+
+    setToken(token);
+    // Strip the fragment from the URL so the token doesn't sit in the address
+    // bar / browser history. replaceState avoids a navigation event.
+    window.history.replaceState(null, "", window.location.pathname);
+
     refresh().then(() => router.push("/"));
   }, [params, refresh, router]);
 
