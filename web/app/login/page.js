@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
 import Button from "@/components/Button";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useAuth } from "@/components/AuthProvider";
@@ -50,6 +51,15 @@ export default function LoginPage() {
 
   return (
     <main className="flex-1 flex items-center justify-center px-6 py-16 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-gray-900 dark:to-gray-950">
+      <div className="absolute top-4 left-4 z-20">
+        <Link
+          href="/"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 hover:bg-violet-200 dark:hover:bg-violet-800 transition-colors text-sm font-medium"
+        >
+          <ArrowLeft size={18} aria-hidden="true" />
+          Início
+        </Link>
+      </div>
       <div className="absolute top-4 right-4 z-20">
         <ThemeToggle />
       </div>
