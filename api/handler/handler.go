@@ -44,9 +44,15 @@ func Init() {
 	}
 	AuthSvc = service.NewAuthService(userRepo, jwtSecret)
 
+	// All three Google OAuth env vars must be set together. No localhost
+	// default for the redirect URL: a silent default would let production
+	// boot without the real callback URL and only fail at Google's
+	// redirect_uri_mismatch check, after the user clicked the login button.
+	// If any of the three is missing, GoogleOAuthService.Enabled() returns
+	// false and the handlers degrade to "google login not configured".
 	GoogleOAuthSvc = service.NewGoogleOAuthService(
 		config.GetEnv("GOOGLE_CLIENT_ID", ""),
 		config.GetEnv("GOOGLE_CLIENT_SECRET", ""),
-		config.GetEnv("GOOGLE_REDIRECT_URL", "http://localhost:8080/api/v1/auth/google/callback"),
+		config.GetEnv("GOOGLE_REDIRECT_URL", ""),
 	)
 }

@@ -40,8 +40,12 @@ func NewGoogleOAuthService(clientID, clientSecret, redirectURL string) *GoogleOA
 	}
 }
 
+// Enabled reports whether Google OAuth is fully configured. RedirectURL is
+// included so a partially-configured service (one of the three env vars
+// missing) is treated as disabled instead of producing a flow that fails
+// late at Google's redirect_uri_mismatch check.
 func (s *GoogleOAuthService) Enabled() bool {
-	return s.config.ClientID != "" && s.config.ClientSecret != ""
+	return s.config.ClientID != "" && s.config.ClientSecret != "" && s.config.RedirectURL != ""
 }
 
 // AuthURL returns the URL the browser should be redirected to in order to start
