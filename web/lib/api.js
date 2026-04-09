@@ -8,8 +8,12 @@ async function request(path, options = {}) {
   });
 
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: "Request failed" }));
-    throw new Error(err.error || `HTTP ${res.status}`);
+    const body = await res.json().catch(() => ({ error: "Request failed" }));
+    const error = new Error(body.error || `HTTP ${res.status}`);
+    // Attach the HTTP status so callers can branch on a stable contract
+    // instead of matching backend display strings (which aren't a contract).
+    error.status = res.status;
+    throw error;
   }
 
   const contentType = res.headers.get("content-type");
