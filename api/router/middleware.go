@@ -2,7 +2,6 @@ package router
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -10,10 +9,8 @@ import (
 )
 
 const (
-	// AuthCookieName is the name of the cookie carrying the JWT.
-	AuthCookieName = "psiencontra_auth"
 	// userContextKey is the gin.Context key under which the authenticated
-	// user ID is stored.
+	// user ID is stored. The reader lives in handler.UserIDFromContext.
 	userContextKey = "user_id"
 )
 
@@ -44,7 +41,7 @@ func RequireAuth() gin.HandlerFunc {
 }
 
 func extractUserID(c *gin.Context) (uuid.UUID, bool) {
-	token := readToken(c)
+	token := handler.ReadToken(c)
 	if token == "" {
 		return uuid.Nil, false
 	}
@@ -53,24 +50,4 @@ func extractUserID(c *gin.Context) (uuid.UUID, bool) {
 		return uuid.Nil, false
 	}
 	return claims.UserID, true
-}
-
-func readToken(c *gin.Context) string {
-	if cookie, err := c.Cookie(AuthCookieName); err == nil && cookie != "" {
-		return cookie
-	}
-	if h := c.GetHeader("Authorization"); strings.HasPrefix(h, "Bearer ") {
-		return strings.TrimPrefix(h, "Bearer ")
-	}
-	return ""
-}
-
-// UserIDFromContext returns the authenticated user ID, if any.
-func UserIDFromContext(c *gin.Context) (uuid.UUID, bool) {
-	v, exists := c.Get(userContextKey)
-	if !exists {
-		return uuid.Nil, false
-	}
-	id, ok := v.(uuid.UUID)
-	return id, ok
 }

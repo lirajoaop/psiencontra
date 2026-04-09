@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -13,7 +14,10 @@ import (
 )
 
 const (
-	authCookieName  = "psiencontra_auth"
+	// AuthCookieName is the name of the cookie carrying the JWT. Exported
+	// so the router middleware can share the same constant instead of
+	// hard-coding a duplicate string.
+	AuthCookieName  = "psiencontra_auth"
 	stateCookieName = "psiencontra_oauth_state"
 )
 
@@ -87,7 +91,7 @@ func Logout(c *gin.Context) {
 }
 
 func Me(c *gin.Context) {
-	token := readTokenFromRequest(c)
+	token := ReadToken(c)
 	if token == "" {
 		c.JSON(http.StatusOK, gin.H{"data": nil})
 		return
@@ -183,11 +187,11 @@ func GoogleCallback(c *gin.Context) {
 
 func setAuthCookie(c *gin.Context, token string) {
 	maxAge := int(AuthSvc.TokenLifetime().Seconds())
-	writeCookie(c, authCookieName, token, maxAge)
+	writeCookie(c, AuthCookieName, token, maxAge)
 }
 
 func clearAuthCookie(c *gin.Context) {
-	writeCookie(c, authCookieName, "", -1)
+	writeCookie(c, AuthCookieName, "", -1)
 }
 
 func setStateCookie(c *gin.Context, state string) {
@@ -222,9 +226,16 @@ func writeCookie(c *gin.Context, name, value string, maxAge int) {
 	c.SetCookie(name, value, maxAge, "/", domain, secure, true)
 }
 
-func readTokenFromRequest(c *gin.Context) string {
-	if cookie, err := c.Cookie(authCookieName); err == nil && cookie != "" {
+// ReadToken extracts the JWT from either the auth cookie (preferred for
+// browser clients) or the Authorization: Bearer header (for non-browser
+// API clients). Centralized so /auth/me and the auth middleware stay
+// consistent for all client types.
+func ReadToken(c *gin.Context) string {
+	if cookie, err := c.Cookie(AuthCookieName); err == nil && cookie != "" {
 		return cookie
+	}
+	if h := c.GetHeader("Authorization"); strings.HasPrefix(h, "Bearer ") {
+		return strings.TrimPrefix(h, "Bearer ")
 	}
 	return ""
 }
