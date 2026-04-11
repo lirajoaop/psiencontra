@@ -47,7 +47,7 @@ export default function Home() {
             transition={{ delay: 0.25 }}
             className="text-violet-200 max-w-xl mx-auto mb-10"
           >
-            Responda 15 perguntas e nossa IA analisará seu perfil, gerando um ranking de afinidade com 8 abordagens e 9 campos de atuação.
+            Escolha entre um questionário rápido ou detalhado e nossa IA analisará seu perfil, gerando um ranking de afinidade com 8 abordagens e 9 campos de atuação.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -71,7 +71,7 @@ export default function Home() {
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           {[
-            { step: "1", title: "Responda", desc: "15 perguntas sobre sua visão da Psicologia, entre objetivas e dissertativas." },
+            { step: "1", title: "Responda", desc: "Escolha entre o questionário rápido (15 perguntas) ou detalhado (65 itens com escala Likert)." },
             { step: "2", title: "IA Analisa", desc: "Nossa inteligência artificial analisa suas respostas e identifica padrões." },
             { step: "3", title: "Descubra", desc: "Veja seu ranking de afinidade com gráficos radar e explicações detalhadas." },
           ].map((item) => (

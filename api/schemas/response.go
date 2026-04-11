@@ -15,6 +15,6 @@ type Response struct {
 	SessionID    uuid.UUID      `gorm:"type:uuid;index" json:"session_id"`
 	QuestionID   int            `json:"question_id"`
 	QuestionText string         `json:"question_text"`
-	AnswerType   string         `json:"answer_type"` // multiple_choice | open_ended
+	AnswerType   string         `json:"answer_type"` // multiple_choice | open_ended | likert
 	AnswerValue  string         `json:"answer_value"`
 }

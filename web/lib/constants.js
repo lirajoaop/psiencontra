@@ -1,12 +1,12 @@
 export const APPROACH_LABELS = {
   psicanalise: "Psicanálise",
-  fenomenologia: "Fenomenologia-Existencial",
+  fenomenologia: "Fenomenologia-Existencial (Sartre, Heidegger)",
   comportamental: "Análise do Comportamento",
   tcc: "Terapia Cognitivo-Comportamental",
   junguiana: "Psicologia Analítica (Jung)",
   gestalt: "Gestalt-terapia",
   socio_historica: "Psicologia Sócio-Histórica",
-  sistemica: "Sistêmica",
+  humanismo: "Humanismo (ACP)",
 };
 
 export const FIELD_LABELS = {
@@ -29,7 +29,7 @@ export const APPROACH_COLORS = {
   junguiana: "#dc2626",
   gestalt: "#ec4899",
   socio_historica: "#8b5cf6",
-  sistemica: "#0891b2",
+  humanismo: "#0891b2",
 };
 
 export const FIELD_COLORS = {
@@ -52,5 +52,5 @@ export const APPROACH_DESCRIPTIONS = {
   junguiana: "Investiga arquétipos, símbolos e o processo de individuação.",
   gestalt: "Enfatiza a awareness, o aqui-e-agora e o contato autêntico.",
   socio_historica: "Compreende o ser humano a partir do contexto social e histórico.",
-  sistemica: "Analisa padrões de comunicação e dinâmicas nos sistemas relacionais.",
+  humanismo: "Valoriza a empatia, a aceitação incondicional e o potencial de crescimento da pessoa.",
 };

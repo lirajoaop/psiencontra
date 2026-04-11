@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import OptionCard from "./OptionCard";
+import LikertScale from "./LikertScale";
 
 export default function QuestionCard({ question, answer, onAnswer, direction }) {
   return (
@@ -30,6 +31,11 @@ export default function QuestionCard({ question, answer, onAnswer, direction }) 
               />
             ))}
           </div>
+        ) : question.type === "likert" ? (
+          <LikertScale
+            selected={answer}
+            onSelect={onAnswer}
+          />
         ) : (
           <textarea
             value={answer || ""}

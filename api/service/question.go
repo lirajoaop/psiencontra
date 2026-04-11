@@ -26,15 +26,52 @@ func (s *QuestionService) GetAll() []Question {
 	return questions
 }
 
+func (s *QuestionService) GetAllDetailed() []Question {
+	return detailedQuestions
+}
+
+func (s *QuestionService) GetByType(qType string) []Question {
+	if qType == "detailed" {
+		return s.GetAllDetailed()
+	}
+	return s.GetAll()
+}
+
 // GetAllShuffled returns a copy of the questions with the options of each
 // multiple-choice question shuffled. This prevents users from associating
 // the same index with the same approach (e.g. index 0 always being
 // psychoanalysis), which would bias their answers.
 func (s *QuestionService) GetAllShuffled() []Question {
-	shuffled := make([]Question, len(questions))
-	for i, q := range questions {
+	return shuffleQuestions(questions)
+}
+
+func (s *QuestionService) GetShuffledByType(qType string) []Question {
+	if qType == "detailed" {
+		return shuffleQuestions(detailedQuestions)
+	}
+	return shuffleQuestions(questions)
+}
+
+func shuffleQuestions(qs []Question) []Question {
+	// Group questions by block so we can shuffle within each block while
+	// preserving the overall block order (approaches → fields → vignettes → reflection).
+	type blockGroup struct {
+		block string
+		items []Question
+	}
+	var groups []blockGroup
+	seen := map[string]int{}
+
+	for _, q := range qs {
+		idx, ok := seen[q.Block]
+		if !ok {
+			idx = len(groups)
+			seen[q.Block] = idx
+			groups = append(groups, blockGroup{block: q.Block})
+		}
 		copyQ := q
-		if len(q.Options) > 0 {
+		// Shuffle multiple-choice options (not Likert — the 1-5 scale is fixed).
+		if len(q.Options) > 0 && q.Type != "likert" {
 			opts := make([]Option, len(q.Options))
 			copy(opts, q.Options)
 			rand.Shuffle(len(opts), func(a, b int) {
@@ -42,7 +79,17 @@ func (s *QuestionService) GetAllShuffled() []Question {
 			})
 			copyQ.Options = opts
 		}
-		shuffled[i] = copyQ
+		groups[idx].items = append(groups[idx].items, copyQ)
+	}
+
+	// Shuffle question order within each block to prevent halo/carry-over
+	// effects (e.g. all Psicanálise Likert items appearing consecutively).
+	var shuffled []Question
+	for _, g := range groups {
+		rand.Shuffle(len(g.items), func(a, b int) {
+			g.items[a], g.items[b] = g.items[b], g.items[a]
+		})
+		shuffled = append(shuffled, g.items...)
 	}
 	return shuffled
 }
@@ -62,7 +109,7 @@ var questions = []Question{
 			{Label: "O desequilíbrio entre aspectos conscientes e inconscientes da personalidade", Value: "desequilibrio_personalidade", Mapping: "junguiana"},
 			{Label: "A interrupção do contato consigo mesmo e com o ambiente", Value: "interrupcao_contato", Mapping: "gestalt"},
 			{Label: "As condições sociais e históricas que oprimem o indivíduo", Value: "condicoes_sociais", Mapping: "socio_historica"},
-			{Label: "Disfunções nos padrões de comunicação e relacionamento", Value: "disfuncoes_comunicacao", Mapping: "sistemica"},
+			{Label: "A falta de aceitação e acolhimento nas relações significativas da pessoa", Value: "falta_aceitacao", Mapping: "humanismo"},
 		},
 	},
 	{
@@ -78,7 +125,7 @@ var questions = []Question{
 			{Label: "Buscamos a individuação — integrar luz e sombra", Value: "individuacao", Mapping: "junguiana"},
 			{Label: "Somos totalidades em constante processo de ajustamento criativo", Value: "totalidades", Mapping: "gestalt"},
 			{Label: "Somos seres históricos, construídos nas relações sociais", Value: "seres_historicos", Mapping: "socio_historica"},
-			{Label: "Somos parte de sistemas interconectados que nos influenciam", Value: "sistemas_interconectados", Mapping: "sistemica"},
+			{Label: "Todo ser humano tem uma tendência natural ao crescimento e à realização de seu potencial", Value: "tendencia_crescimento", Mapping: "humanismo"},
 		},
 	},
 	{
@@ -100,7 +147,7 @@ var questions = []Question{
 			{Label: "Guiar o paciente na exploração de símbolos e arquétipos", Value: "explorar_simbolos", Mapping: "junguiana"},
 			{Label: "Ampliar a awareness e o contato com o momento presente", Value: "ampliar_awareness", Mapping: "gestalt"},
 			{Label: "Promover consciência crítica e transformação social", Value: "consciencia_critica", Mapping: "socio_historica"},
-			{Label: "Entender e reorganizar os padrões relacionais do sistema", Value: "reorganizar_padroes", Mapping: "sistemica"},
+			{Label: "Oferecer aceitação incondicional, empatia e autenticidade para que o paciente se desenvolva", Value: "aceitacao_incondicional", Mapping: "humanismo"},
 		},
 	},
 	{
@@ -110,13 +157,13 @@ var questions = []Question{
 		Block: "approaches",
 		Options: []Option{
 			{Label: "\"O sonho é a estrada real para o inconsciente\"", Value: "sonho_inconsciente", Mapping: "psicanalise"},
-			{Label: "\"Tornar-se pessoa é o objetivo da vida\"", Value: "tornar_pessoa", Mapping: "fenomenologia"},
+			{Label: "\"O homem está condenado a ser livre\"", Value: "condenado_livre", Mapping: "fenomenologia"},
 			{Label: "\"O comportamento é função de suas consequências\"", Value: "comportamento_consequencias", Mapping: "comportamental"},
 			{Label: "\"Não são as coisas que nos perturbam, mas a visão que temos delas\"", Value: "visao_coisas", Mapping: "tcc"},
 			{Label: "\"Quem olha para fora sonha; quem olha para dentro desperta\"", Value: "olha_dentro", Mapping: "junguiana"},
 			{Label: "\"Perder a cabeça e cair em si\"", Value: "cair_em_si", Mapping: "gestalt"},
 			{Label: "\"O homem se faz ao fazer o mundo e o mundo o faz\"", Value: "homem_mundo", Mapping: "socio_historica"},
-			{Label: "\"O problema não está na pessoa, está no padrão\"", Value: "problema_padrao", Mapping: "sistemica"},
+			{Label: "\"Tornar-se pessoa é o objetivo da vida\"", Value: "tornar_pessoa", Mapping: "humanismo"},
 		},
 	},
 	{
@@ -138,7 +185,7 @@ var questions = []Question{
 			{Label: "A análise de sonhos, mitos e símbolos universais", Value: "sonhos_mitos", Mapping: "junguiana"},
 			{Label: "A observação fenomenológica do aqui-e-agora", Value: "aqui_agora", Mapping: "gestalt"},
 			{Label: "A análise do contexto social, político e histórico", Value: "contexto_social", Mapping: "socio_historica"},
-			{Label: "A observação dos padrões de interação no sistema familiar", Value: "padroes_interacao", Mapping: "sistemica"},
+			{Label: "A qualidade da relação terapêutica e os relatos do paciente sobre sua experiência de mudança", Value: "relacao_terapeutica", Mapping: "humanismo"},
 		},
 	},
 	{
@@ -154,7 +201,7 @@ var questions = []Question{
 			{Label: "Facilitar um processo de autoconhecimento profundo usando símbolos", Value: "autoconhecimento_simbolos", Mapping: "junguiana"},
 			{Label: "Conduzir um grupo de vivência focado na percepção corporal", Value: "vivencia_corporal", Mapping: "gestalt"},
 			{Label: "Coordenar um projeto de intervenção comunitária", Value: "intervencao_comunitaria", Mapping: "socio_historica"},
-			{Label: "Fazer terapia familiar trabalhando as dinâmicas do sistema", Value: "terapia_familiar", Mapping: "sistemica"},
+			{Label: "Oferecer um espaço de escuta empática e aceitação para pessoas em processo de autoconhecimento", Value: "escuta_empatica", Mapping: "humanismo"},
 		},
 	},
 	{

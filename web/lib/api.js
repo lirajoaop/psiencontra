@@ -40,12 +40,15 @@ async function request(path, options = {}) {
   return json.data;
 }
 
-export function getQuestions() {
-  return request("/questions");
+export function getQuestions(type = "simple") {
+  return request(`/questions?type=${type}`);
 }
 
-export function createSession() {
-  return request("/sessions", { method: "POST" });
+export function createSession(questionnaireType = "simple") {
+  return request("/sessions", {
+    method: "POST",
+    body: JSON.stringify({ questionnaire_type: questionnaireType }),
+  });
 }
 
 export function submitResponses(sessionId, responses) {
