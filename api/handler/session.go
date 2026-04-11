@@ -13,7 +13,14 @@ func CreateSession(c *gin.Context) {
 	if id, ok := UserIDFromContext(c); ok {
 		userID = &id
 	}
-	session, err := SessionSvc.CreateSession(userID)
+
+	var req struct {
+		QuestionnaireType string `json:"questionnaire_type"`
+	}
+	// Body is optional — default to "simple" if missing or unparseable.
+	_ = c.ShouldBindJSON(&req)
+
+	session, err := SessionSvc.CreateSession(userID, req.QuestionnaireType)
 	if err != nil {
 		sendError(c, http.StatusInternalServerError, "failed to create session")
 		return

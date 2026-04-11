@@ -33,8 +33,11 @@ func NewSessionService(
 	}
 }
 
-func (s *SessionService) CreateSession(userID *uuid.UUID) (*schemas.Session, error) {
-	session := &schemas.Session{UserID: userID}
+func (s *SessionService) CreateSession(userID *uuid.UUID, questionnaireType string) (*schemas.Session, error) {
+	if questionnaireType == "" {
+		questionnaireType = "simple"
+	}
+	session := &schemas.Session{UserID: userID, QuestionnaireType: questionnaireType}
 	if err := s.sessionRepo.Create(session); err != nil {
 		return nil, err
 	}
@@ -52,7 +55,7 @@ func (s *SessionService) SubmitResponses(sessionID uuid.UUID, inputs []SubmitRes
 		return nil, fmt.Errorf("session not found: %w", err)
 	}
 
-	questions := s.questionSvc.GetAll()
+	questions := s.questionSvc.GetByType(session.QuestionnaireType)
 	questionMap := make(map[int]Question)
 	for _, q := range questions {
 		questionMap[q.ID] = q
@@ -83,7 +86,12 @@ func (s *SessionService) SubmitResponses(sessionID uuid.UUID, inputs []SubmitRes
 		return nil, fmt.Errorf("failed to fetch responses: %w", err)
 	}
 
-	prompt := BuildPrompt(savedResponses)
+	var prompt string
+	if session.QuestionnaireType == "detailed" {
+		prompt = BuildDetailedPrompt(savedResponses)
+	} else {
+		prompt = BuildPrompt(savedResponses)
+	}
 	aiResult, provider, err := s.aiSvc.Analyze(prompt)
 	if err != nil {
 		return nil, fmt.Errorf("AI analysis failed: %w", err)
