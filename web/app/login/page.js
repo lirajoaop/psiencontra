@@ -76,7 +76,7 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={handleGoogle}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-violet-400 dark:hover:border-violet-500 transition-colors mb-6 font-medium text-gray-700 dark:text-gray-200"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-violet-400 dark:hover:border-violet-500 transition-colors mb-6 font-medium text-gray-700 dark:text-gray-200 cursor-pointer"
         >
           <GoogleIcon />
           Entrar com Google
