@@ -86,9 +86,19 @@ func (s *SessionService) SubmitResponses(sessionID uuid.UUID, inputs []SubmitRes
 		return nil, fmt.Errorf("failed to fetch responses: %w", err)
 	}
 
-	var prompt string
+	var (
+		prompt              string
+		deterministicScores bool
+		approachScores      map[string]float64
+		fieldScores         map[string]float64
+	)
 	if session.QuestionnaireType == "detailed" {
-		prompt = BuildDetailedPrompt(savedResponses)
+		// Detailed questionnaire: scores are computed deterministically via
+		// ipsative normalization. The AI is only asked to write descriptions
+		// and the summary — it does NOT score the Likert items.
+		approachScores, fieldScores = ComputeIpsativeScores(savedResponses, questions)
+		prompt = BuildDetailedPrompt(approachScores, fieldScores)
+		deterministicScores = true
 	} else {
 		prompt = BuildPrompt(savedResponses)
 	}
@@ -97,13 +107,30 @@ func (s *SessionService) SubmitResponses(sessionID uuid.UUID, inputs []SubmitRes
 		return nil, fmt.Errorf("AI analysis failed: %w", err)
 	}
 
+	approachScoresJSON := aiResult.ApproachScores
+	fieldScoresJSON := aiResult.FieldScores
 	approachDetails, _ := json.Marshal(aiResult.ApproachDetails)
 	fieldDetails, _ := json.Marshal(aiResult.FieldDetails)
 
+	if deterministicScores {
+		// Safety net: override whatever the AI returned with our canonical
+		// deterministic scores. Also rewrite the "score" field inside
+		// approach_details / field_details so the UI doesn't show a score
+		// that disagrees with the ranking.
+		if b, err := json.Marshal(approachScores); err == nil {
+			approachScoresJSON = b
+		}
+		if b, err := json.Marshal(fieldScores); err == nil {
+			fieldScoresJSON = b
+		}
+		approachDetails = overrideDetailScores(approachDetails, approachScores)
+		fieldDetails = overrideDetailScores(fieldDetails, fieldScores)
+	}
+
 	result := &schemas.Result{
 		SessionID:       session.ID,
-		ApproachScores:  aiResult.ApproachScores,
-		FieldScores:     aiResult.FieldScores,
+		ApproachScores:  approachScoresJSON,
+		FieldScores:     fieldScoresJSON,
 		Explanation:     aiResult.Summary,
 		ApproachDetails: approachDetails,
 		FieldDetails:    fieldDetails,
@@ -119,4 +146,8 @@ func (s *SessionService) SubmitResponses(sessionID uuid.UUID, inputs []SubmitRes
 
 func (s *SessionService) GetResult(sessionID uuid.UUID) (*schemas.Result, error) {
 	return s.resultRepo.FindBySessionID(sessionID)
+}
+
+func (s *SessionService) GetSession(sessionID uuid.UUID) (*schemas.Session, error) {
+	return s.sessionRepo.FindByID(sessionID)
 }

@@ -30,7 +30,7 @@ var approachLabels = map[string]string{
 	"junguiana":       "Psicologia Analítica (Jung)",
 	"gestalt":         "Gestalt-terapia",
 	"socio_historica": "Psicologia Sócio-Histórica",
-	"sistemica":       "Sistêmica",
+	"humanismo":       "Humanismo (ACP)",
 }
 
 var fieldLabels = map[string]string{
@@ -45,7 +45,7 @@ var fieldLabels = map[string]string{
 	"psicometria":     "Psicometria",
 }
 
-func (s *PDFService) Generate(result *schemas.Result) ([]byte, error) {
+func (s *PDFService) Generate(result *schemas.Result, questionnaireType string) ([]byte, error) {
 	pdf := gofpdf.New("P", "mm", "A4", "")
 	pdf.SetAutoPageBreak(true, 20)
 	tr := pdf.UnicodeTranslatorFromDescriptor("")
@@ -58,7 +58,16 @@ func (s *PDFService) Generate(result *schemas.Result) ([]byte, error) {
 	pdf.SetFont("Helvetica", "", 12)
 	pdf.SetTextColor(100, 100, 100)
 	pdf.CellFormat(0, 8, tr("Seu Perfil de Afinidade em Psicologia"), "", 1, "C", false, 0, "")
-	pdf.Ln(10)
+
+	// Questionnaire type badge
+	badge := tr("Questionário Rápido · Análise por IA")
+	if questionnaireType == "detailed" {
+		badge = tr("Questionário Detalhado · Scoring psicométrico determinístico (ipsativo)")
+	}
+	pdf.SetFont("Helvetica", "I", 9)
+	pdf.SetTextColor(139, 92, 246) // violet-500
+	pdf.CellFormat(0, 6, badge, "", 1, "C", false, 0, "")
+	pdf.Ln(8)
 
 	// Summary
 	pdf.SetFont("Helvetica", "B", 14)
