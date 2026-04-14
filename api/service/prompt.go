@@ -53,12 +53,17 @@ Respostas do estudante:
 	return sb.String()
 }
 
-func BuildDetailedPrompt(responses []schemas.Response) string {
+// BuildDetailedPrompt builds a prompt for the AI to generate ONLY the textual
+// descriptions and summary for a detailed questionnaire result. The numeric
+// scores themselves are computed deterministically via ipsative normalization
+// in scoring.go — the AI does not touch them. This guarantees psychometric
+// reproducibility: the same Likert answers always yield the same scores.
+func BuildDetailedPrompt(approachScores, fieldScores map[string]float64) string {
 	var sb strings.Builder
 
-	sb.WriteString(`Você é um psicólogo especialista em orientação profissional com profundo conhecimento das 8 abordagens teóricas e dos 9 campos de atuação em Psicologia. Analise as respostas de um questionário detalhado (escala Likert + respostas dissertativas) e gere um perfil de afinidade preciso e diferenciado.
+	sb.WriteString(`Você é um psicólogo especialista em orientação profissional. Os scores de afinidade JÁ FORAM CALCULADOS de forma determinística a partir das respostas Likert do estudante, usando normalização ipsativa (desvio em relação à média pessoal do respondente). Seu papel é APENAS gerar descrições textuais e o resumo narrativo — NÃO recalcule nem altere os scores.
 
-As 8 abordagens teóricas são:
+As 8 abordagens teóricas:
 1. Psicanálise (Freud, Lacan, Winnicott)
 2. Fenomenologia-Existencial (Husserl, Heidegger, Sartre)
 3. Análise do Comportamento (Skinner)
@@ -68,7 +73,7 @@ As 8 abordagens teóricas são:
 7. Psicologia Sócio-Histórica (Vigotski)
 8. Humanismo / Abordagem Centrada na Pessoa (Rogers, Maslow)
 
-Os 9 campos de atuação são:
+Os 9 campos de atuação:
 1. Psicologia Clínica
 2. Psicologia Organizacional
 3. Psicologia Escolar/Educacional
@@ -79,37 +84,90 @@ Os 9 campos de atuação são:
 8. Neuropsicologia
 9. Psicometria
 
-O questionário tem 4 blocos:
-- Bloco 1 (Abordagens): 32 afirmações Likert (1-5), 4 por abordagem, cobrindo visão de sujeito, concepção de mudança, postura clínica e epistemologia.
-- Bloco 2 (Campos): 27 afirmações Likert (1-5), 3 por campo, cobrindo público/contexto, atividade e motivação.
-- Bloco 3 (Vinhetas Clínicas): 3 cenários dissertativos que revelam abordagem e campo simultaneamente.
-- Bloco 4 (Reflexão Pessoal): 3 perguntas abertas sobre influências, motivação e valores.
+SCORES PRÉ-CALCULADOS (use exatamente estes valores — não recalcule):
 
-Respostas do estudante:
+Abordagens:
 `)
-
-	for _, r := range responses {
-		sb.WriteString(fmt.Sprintf("\nPergunta %d: %s\n", r.QuestionID, r.QuestionText))
-		switch r.AnswerType {
-		case "likert":
-			sb.WriteString(fmt.Sprintf("Resposta (Likert 1-5): %s\n", r.AnswerValue))
-		case "multiple_choice":
-			sb.WriteString(fmt.Sprintf("Resposta (objetiva): %s\n", r.AnswerValue))
-		default:
-			sb.WriteString(fmt.Sprintf("Resposta (dissertativa): %s\n", r.AnswerValue))
-		}
+	for _, key := range approachOrder {
+		sb.WriteString(fmt.Sprintf("- %s: %.0f\n", key, approachScores[key]))
+	}
+	sb.WriteString("\nCampos:\n")
+	for _, key := range fieldOrder {
+		sb.WriteString(fmt.Sprintf("- %s: %.0f\n", key, fieldScores[key]))
 	}
 
 	sb.WriteString(`
-INSTRUÇÕES DE ANÁLISE:
-1. Para itens Likert: calcule a média ponderada por abordagem/campo (4 itens por abordagem, 3 por campo). Converta a média 1-5 para escala 0-100.
-2. Para vinhetas clínicas: analise o vocabulário, o raciocínio clínico e a postura implícita. Uma vinheta pode indicar afinidade com múltiplas abordagens e campos simultaneamente — distribua o peso proporcionalmente.
-3. Para reflexões pessoais: identifique referências intelectuais, valores e motivações que reforcem ou contradigam o perfil Likert.
-4. O score final deve integrar as 3 fontes (Likert + vinhetas + reflexões), priorizando o Likert como base quantitativa e usando as respostas abertas como ajuste qualitativo.
-5. Gere scores genuinamente diferenciados — o perfil deve ter picos e vales claros, não uma linha plana.
+SUA TAREFA:
+1. Para cada abordagem e cada campo, escreva uma descrição de 1 frase curta que reflita o score e o que ele indica sobre o estudante (ex: score alto = afinidade forte, score baixo = pouca identificação).
+2. Escreva um summary de 3-5 frases descrevendo o perfil geral do estudante, destacando as abordagens e campos de maior afinidade, possíveis tensões entre eles, e conexões observáveis.
+3. Use EXATAMENTE os scores fornecidos acima. NÃO invente, NÃO recalcule.
 
 `)
-	sb.WriteString(jsonInstructions("3-5 frases descrevendo o perfil do estudante com mais profundidade, mencionando conexões entre abordagem e campo quando houver"))
+	sb.WriteString(detailedJSONInstructions(approachScores, fieldScores))
+	return sb.String()
+}
+
+var approachOrder = []string{
+	"psicanalise", "fenomenologia", "comportamental", "tcc",
+	"junguiana", "gestalt", "socio_historica", "humanismo",
+}
+
+var fieldOrder = []string{
+	"clinica", "organizacional", "escolar", "social", "saude",
+	"juridica", "esporte", "neuropsicologia", "psicometria",
+}
+
+func detailedJSONInstructions(approachScores, fieldScores map[string]float64) string {
+	var sb strings.Builder
+	sb.WriteString(`Gere EXCLUSIVAMENTE um JSON válido (sem markdown, sem crases, sem texto extra) no seguinte formato. Os campos "score" devem ser EXATAMENTE os valores pré-calculados:
+{
+  "approach_scores": {
+`)
+	for i, key := range approachOrder {
+		comma := ","
+		if i == len(approachOrder)-1 {
+			comma = ""
+		}
+		sb.WriteString(fmt.Sprintf("    \"%s\": %.0f%s\n", key, approachScores[key], comma))
+	}
+	sb.WriteString(`  },
+  "field_scores": {
+`)
+	for i, key := range fieldOrder {
+		comma := ","
+		if i == len(fieldOrder)-1 {
+			comma = ""
+		}
+		sb.WriteString(fmt.Sprintf("    \"%s\": %.0f%s\n", key, fieldScores[key], comma))
+	}
+	sb.WriteString(`  },
+  "approach_details": {
+`)
+	for i, key := range approachOrder {
+		comma := ","
+		if i == len(approachOrder)-1 {
+			comma = ""
+		}
+		sb.WriteString(fmt.Sprintf("    \"%s\": {\"score\": %.0f, \"description\": \"<1 frase curta refletindo o score>\"}%s\n", key, approachScores[key], comma))
+	}
+	sb.WriteString(`  },
+  "field_details": {
+`)
+	for i, key := range fieldOrder {
+		comma := ","
+		if i == len(fieldOrder)-1 {
+			comma = ""
+		}
+		sb.WriteString(fmt.Sprintf("    \"%s\": {\"score\": %.0f, \"description\": \"<1 frase curta refletindo o score>\"}%s\n", key, fieldScores[key], comma))
+	}
+	sb.WriteString(`  },
+  "summary": "<3-5 frases descrevendo o perfil do estudante, destacando maiores afinidades e conexões>"
+}
+
+REGRAS:
+- Use EXATAMENTE os scores fornecidos acima. NÃO altere nenhum valor numérico.
+- As descrições devem ser coerentes com o score: scores altos indicam afinidade forte, scores baixos indicam pouca identificação.
+- Retorne APENAS o JSON, sem nenhum texto adicional.`)
 	return sb.String()
 }
 

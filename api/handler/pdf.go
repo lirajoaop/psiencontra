@@ -21,7 +21,13 @@ func DownloadPDF(c *gin.Context) {
 		return
 	}
 
-	pdfBytes, err := PDFSvc.Generate(result)
+	session, err := SessionSvc.GetSession(id)
+	questionnaireType := "simple"
+	if err == nil && session != nil {
+		questionnaireType = session.QuestionnaireType
+	}
+
+	pdfBytes, err := PDFSvc.Generate(result, questionnaireType)
 	if err != nil {
 		sendError(c, http.StatusInternalServerError, "failed to generate PDF")
 		return

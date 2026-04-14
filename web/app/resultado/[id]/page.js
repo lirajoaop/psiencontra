@@ -177,9 +177,11 @@ export default function Resultado({ params }) {
           </Button>
         </div>
 
-        {/* AI Provider Badge */}
+        {/* Method Badge */}
         <p className="text-center text-xs text-gray-400 mt-8">
-          Análise gerada por {result.ai_provider === "gemini" ? "Google Gemini" : "Groq (Llama 3.3)"}
+          {result.questionnaire_type === "detailed"
+            ? "Questionário Detalhado · Scoring psicométrico determinístico (ipsativo)"
+            : `Questionário Rápido · Análise por ${result.ai_provider === "gemini" ? "Google Gemini" : "Groq (Llama 3.3)"}`}
         </p>
       </div>
     </main>

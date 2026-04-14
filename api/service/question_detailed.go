@@ -457,45 +457,6 @@ var detailedQuestions = []Question{
 		Options: likertOptions("psicometria"),
 	},
 
-	// ===== BLOCK 3: CLINICAL VIGNETTES (3 open-ended) =====
-	{
-		ID:    301,
-		Text:  "Uma mãe procura você preocupada porque seu filho de 8 anos está tendo pesadelos recorrentes e recusando ir à escola. Como você pensaria esse caso?",
-		Type:  "open_ended",
-		Block: "vignettes",
-	},
-	{
-		ID:    302,
-		Text:  "Em uma sessão, um adulto diz: 'Eu faço tudo certo — bom emprego, bom casamento — mas sinto um vazio enorme.' Como você entenderia e abordaria essa queixa?",
-		Type:  "open_ended",
-		Block: "vignettes",
-	},
-	{
-		ID:    303,
-		Text:  "Você é chamado(a) para intervir em uma empresa onde vários funcionários estão apresentando sintomas de burnout. Como você abordaria a situação?",
-		Type:  "open_ended",
-		Block: "vignettes",
-	},
-
-	// ===== BLOCK 4: PERSONAL REFLECTION (3 open-ended) =====
-	{
-		ID:    401,
-		Text:  "Quais autores, livros, filmes ou ideias mais influenciaram a forma como você entende o ser humano?",
-		Type:  "open_ended",
-		Block: "reflection",
-	},
-	{
-		ID:    402,
-		Text:  "O que te atraiu para a psicologia? Conte brevemente o momento ou motivo que despertou esse interesse.",
-		Type:  "open_ended",
-		Block: "reflection",
-	},
-	{
-		ID:    403,
-		Text:  "Se pudesse mudar uma coisa no mundo usando a psicologia como ferramenta, o que mudaria?",
-		Type:  "open_ended",
-		Block: "reflection",
-	},
 }
 
 // likertOptions returns the standard 1-5 Likert scale options, all mapping to

@@ -71,5 +71,20 @@ func GetResult(c *gin.Context) {
 		return
 	}
 
-	sendSuccess(c, result)
+	questionnaireType := "simple"
+	if session, err := SessionSvc.GetSession(id); err == nil && session != nil {
+		questionnaireType = session.QuestionnaireType
+	}
+
+	sendSuccess(c, gin.H{
+		"id":                 result.ID,
+		"session_id":         result.SessionID,
+		"approach_scores":    result.ApproachScores,
+		"field_scores":       result.FieldScores,
+		"explanation":        result.Explanation,
+		"approach_details":   result.ApproachDetails,
+		"field_details":      result.FieldDetails,
+		"ai_provider":        result.AIProvider,
+		"questionnaire_type": questionnaireType,
+	})
 }

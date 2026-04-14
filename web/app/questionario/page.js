@@ -120,7 +120,7 @@ export default function Questionario() {
                 <h2 className="text-lg font-bold text-violet-900 dark:text-violet-200">Rápido</h2>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                15 perguntas entre objetivas e dissertativas. Resultado gerado por IA em minutos.
+                15 perguntas entre objetivas e dissertativas. Análise interpretativa feita por IA — leve e exploratório.
               </p>
               <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                 <span className="flex items-center gap-1">
@@ -151,14 +151,14 @@ export default function Questionario() {
                 <h2 className="text-lg font-bold text-violet-900 dark:text-violet-200">Detalhado</h2>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                65 itens com escala Likert, situações práticas e reflexões pessoais. Perfil mais preciso e diferenciado.
+                59 afirmações em escala Likert. Scoring determinístico e reprodutível, sem interferência da IA nos números.
               </p>
               <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                 <span className="flex items-center gap-1">
-                  <ClockIcon /> ~20 min
+                  <ClockIcon /> ~15 min
                 </span>
                 <span className="flex items-center gap-1">
-                  <ListIcon /> 65 itens
+                  <ListIcon /> 59 itens
                 </span>
               </div>
             </motion.button>
