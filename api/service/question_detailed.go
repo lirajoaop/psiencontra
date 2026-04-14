@@ -1,7 +1,7 @@
 package service
 
 var detailedQuestions = []Question{
-	// ===== BLOCK 1: THEORETICAL APPROACHES — LIKERT (32 items, 4 per approach) =====
+	// ===== BLOCK 1: THEORETICAL APPROACHES — LIKERT (40 items: 4 per approach + 1 reverse per approach) =====
 	// Each statement is rated 1-5 (Discordo totalmente → Concordo totalmente).
 	// Items are shuffled at runtime within each block to prevent halo/carry-over
 	// effects and reduce construct transparency.
@@ -121,7 +121,7 @@ var detailedQuestions = []Question{
 	},
 	{
 		ID:      116,
-		Text:    "Me identifico com a lógica de ter manuais de tratamento específicos para cada diagnóstico, com sessões estruturadas passo a passo e escalas para acompanhar a evolução do paciente.",
+		Text:    "Tratamentos com objetivos claros por sessão e uso de escalas para acompanhar a evolução do paciente me parecem uma boa forma de fazer terapia.",
 		Type:    "likert",
 		Block:   "approaches",
 		Options: likertOptions("tcc"),
@@ -234,20 +234,91 @@ var detailedQuestions = []Question{
 	},
 	{
 		ID:      131,
-		Text:    "O terapeuta não precisa de técnicas sofisticadas — empatia genuína, aceitação incondicional e congruência são suficientes para promover mudança.",
+		Text:    "Empatia genuína, aceitação incondicional e autenticidade do terapeuta são os ingredientes mais importantes da mudança terapêutica.",
 		Type:    "likert",
 		Block:   "approaches",
 		Options: likertOptions("humanismo"),
 	},
 	{
 		ID:      132,
-		Text:    "A qualidade da relação terapêutica é o fator mais determinante para o sucesso da terapia, independentemente da técnica utilizada.",
+		Text:    "Confio na capacidade de cada pessoa de encontrar suas próprias respostas quando é escutada sem julgamento, mesmo em crises profundas.",
 		Type:    "likert",
 		Block:   "approaches",
 		Options: likertOptions("humanismo"),
 	},
 
-	// ===== BLOCK 2: FIELDS OF PRACTICE — LIKERT (27 items, 3 per field) =====
+	// ===== REVERSE ITEMS (1 per approach, 8 total) =====
+	// These are phrased *against* the construct. The scoring service inverts
+	// the rating (6 - r) before ipsativization. Reverse items reduce item
+	// transparency and flag acquiescent/inattentive responders whose profile
+	// becomes internally incoherent (high on tese AND anti-tese simultaneously).
+
+	{
+		ID:       133,
+		Text:     "A maior parte do sofrimento psíquico pode ser explicada sem recorrer a conceitos como inconsciente ou conflitos infantis.",
+		Type:     "likert",
+		Block:    "approaches",
+		Options:  likertOptions("psicanalise"),
+		Reversed: true,
+	},
+	{
+		ID:       134,
+		Text:     "Explicar o comportamento humano por leis gerais e categorias objetivas é mais útil do que se deter na experiência singular de cada pessoa.",
+		Type:     "likert",
+		Block:    "approaches",
+		Options:  likertOptions("fenomenologia"),
+		Reversed: true,
+	},
+	{
+		ID:       135,
+		Text:     "Conceitos sobre processos internos — desejos, significados, sentidos — são indispensáveis na clínica, mesmo quando não podem ser observados diretamente.",
+		Type:     "likert",
+		Block:    "approaches",
+		Options:  likertOptions("comportamental"),
+		Reversed: true,
+	},
+	{
+		ID:       136,
+		Text:     "Protocolos estruturados e técnicas padronizadas tendem a engessar a terapia; o trabalho clínico deveria ser mais aberto e menos manualizado.",
+		Type:     "likert",
+		Block:    "approaches",
+		Options:  likertOptions("tcc"),
+		Reversed: true,
+	},
+	{
+		ID:       137,
+		Text:     "Arquétipos e inconsciente coletivo são metáforas literárias interessantes, mas têm pouco valor explicativo para a prática clínica.",
+		Type:     "likert",
+		Block:    "approaches",
+		Options:  likertOptions("junguiana"),
+		Reversed: true,
+	},
+	{
+		ID:       138,
+		Text:     "Para entender o sofrimento, é mais produtivo reconstruir a história do paciente do que insistir no que se passa no aqui-e-agora.",
+		Type:     "likert",
+		Block:    "approaches",
+		Options:  likertOptions("gestalt"),
+		Reversed: true,
+	},
+	{
+		ID:       139,
+		Text:     "O foco do psicólogo deve ser o indivíduo e sua vida interna; questões sociais e políticas competem a outros profissionais.",
+		Type:     "likert",
+		Block:    "approaches",
+		Options:  likertOptions("socio_historica"),
+		Reversed: true,
+	},
+	{
+		ID:       140,
+		Text:     "Sem técnicas específicas e bem definidas, a relação terapêutica sozinha dificilmente gera mudanças clínicas consistentes.",
+		Type:     "likert",
+		Block:    "approaches",
+		Options:  likertOptions("humanismo"),
+		Reversed: true,
+	},
+
+	// ===== BLOCK 2: FIELDS OF PRACTICE — LIKERT (36 items, 4 per field) =====
 	// Dimensions: A=contexto/público, B=atividade/intervenção, C=motivação
 
 	// --- Psicologia Clínica ---
@@ -268,6 +339,13 @@ var detailedQuestions = []Question{
 	{
 		ID:      203,
 		Text:    "Minha principal motivação é acolher o sofrimento humano e ajudar as pessoas a encontrarem caminhos de melhora.",
+		Type:    "likert",
+		Block:   "fields",
+		Options: likertOptions("clinica"),
+	},
+	{
+		ID:      228,
+		Text:    "Construir vínculo terapêutico de longo prazo, acompanhando o processo de transformação de um mesmo paciente ao longo do tempo, é algo com que me identifico.",
 		Type:    "likert",
 		Block:   "fields",
 		Options: likertOptions("clinica"),
@@ -295,6 +373,13 @@ var detailedQuestions = []Question{
 		Block:   "fields",
 		Options: likertOptions("organizacional"),
 	},
+	{
+		ID:      229,
+		Text:    "Conduzir avaliações psicológicas em processos seletivos e orientar programas de desenvolvimento de carreira são atividades que me atraem.",
+		Type:    "likert",
+		Block:   "fields",
+		Options: likertOptions("organizacional"),
+	},
 
 	// --- Psicologia Escolar/Educacional ---
 	{
@@ -314,6 +399,13 @@ var detailedQuestions = []Question{
 	{
 		ID:      209,
 		Text:    "Acredito que a psicologia pode transformar a educação e promover condições melhores de aprendizagem para todos.",
+		Type:    "likert",
+		Block:   "fields",
+		Options: likertOptions("escolar"),
+	},
+	{
+		ID:      230,
+		Text:    "Me imagino mediando conflitos entre alunos, professores e famílias e estruturando ações preventivas de saúde mental na escola.",
 		Type:    "likert",
 		Block:   "fields",
 		Options: likertOptions("escolar"),
@@ -341,6 +433,13 @@ var detailedQuestions = []Question{
 		Block:   "fields",
 		Options: likertOptions("social"),
 	},
+	{
+		ID:      231,
+		Text:    "Acompanhar famílias atendidas pelo SUAS, articulando rede com assistência social e saúde, é um trabalho com que me identifico.",
+		Type:    "likert",
+		Block:   "fields",
+		Options: likertOptions("social"),
+	},
 
 	// --- Psicologia da Saúde/Hospitalar ---
 	{
@@ -360,6 +459,13 @@ var detailedQuestions = []Question{
 	{
 		ID:      215,
 		Text:    "Quero contribuir para o cuidado integral, integrando saúde mental e saúde física no atendimento ao paciente.",
+		Type:    "likert",
+		Block:   "fields",
+		Options: likertOptions("saude"),
+	},
+	{
+		ID:      232,
+		Text:    "Me atrai integrar equipes multidisciplinares em UBS, trabalhando promoção de saúde e atenção psicossocial junto ao SUS.",
 		Type:    "likert",
 		Block:   "fields",
 		Options: likertOptions("saude"),
@@ -387,6 +493,13 @@ var detailedQuestions = []Question{
 		Block:   "fields",
 		Options: likertOptions("juridica"),
 	},
+	{
+		ID:      233,
+		Text:    "Atuar em Varas da Infância, medidas de proteção e processos de adoção, escutando crianças e famílias em situações complexas, é uma perspectiva que me interessa.",
+		Type:    "likert",
+		Block:   "fields",
+		Options: likertOptions("juridica"),
+	},
 
 	// --- Psicologia do Esporte ---
 	{
@@ -406,6 +519,13 @@ var detailedQuestions = []Question{
 	{
 		ID:      221,
 		Text:    "Gostaria de ajudar atletas a alcançarem seu potencial máximo, trabalhando os aspectos psicológicos da performance.",
+		Type:    "likert",
+		Block:   "fields",
+		Options: likertOptions("esporte"),
+	},
+	{
+		ID:      234,
+		Text:    "Acompanhar atletas em transições de carreira — lesões, aposentadoria, pressão midiática — é um aspecto da psicologia do esporte que me atrai.",
 		Type:    "likert",
 		Block:   "fields",
 		Options: likertOptions("esporte"),
@@ -433,6 +553,13 @@ var detailedQuestions = []Question{
 		Block:   "fields",
 		Options: likertOptions("neuropsicologia"),
 	},
+	{
+		ID:      235,
+		Text:    "Me atrai trabalhar com pacientes pós-AVC, TCE, TDAH ou quadros de declínio cognitivo, avaliando e reabilitando funções cognitivas.",
+		Type:    "likert",
+		Block:   "fields",
+		Options: likertOptions("neuropsicologia"),
+	},
 
 	// --- Psicometria ---
 	{
@@ -452,6 +579,13 @@ var detailedQuestions = []Question{
 	{
 		ID:      227,
 		Text:    "Acredito que a psicologia precisa de instrumentos de medida cada vez mais precisos, justos e cientificamente fundamentados.",
+		Type:    "likert",
+		Block:   "fields",
+		Options: likertOptions("psicometria"),
+	},
+	{
+		ID:      236,
+		Text:    "Me interessaria contribuir para a validação e adaptação de instrumentos de avaliação psicológica para a realidade brasileira.",
 		Type:    "likert",
 		Block:   "fields",
 		Options: likertOptions("psicometria"),

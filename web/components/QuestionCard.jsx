@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import OptionCard from "./OptionCard";
 import LikertScale from "./LikertScale";
+import GlossaryText from "./GlossaryText";
 
 export default function QuestionCard({ question, answer, onAnswer, direction }) {
   return (
@@ -17,7 +18,7 @@ export default function QuestionCard({ question, answer, onAnswer, direction }) 
         className="w-full"
       >
         <h2 className="text-xl md:text-2xl font-bold text-violet-900 dark:text-violet-100 mb-6">
-          {question.text}
+          <GlossaryText>{question.text}</GlossaryText>
         </h2>
 
         {question.type === "multiple_choice" ? (

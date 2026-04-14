@@ -15,7 +15,7 @@ Psychology students, especially in their first semesters, are confronted with a 
 PsiEncontra offers two questionnaire modes that explore the student's view on topics such as human suffering, therapeutic methods, contexts of practice and the role of the psychologist:
 
 - **Simple mode** — 15 questions combining multiple-choice and open-ended items. Scores are produced by an AI (Google Gemini, with Groq Llama as fallback) that interprets vocabulary, references and reasoning.
-- **Detailed mode** — ~59 Likert items (1–5) distributed across 8 approaches and 9 fields. Scores are computed by a **deterministic ipsative algorithm** on the backend; the AI is used only to write personalized descriptions for each result.
+- **Detailed mode** — ~76 Likert items (1–5) distributed across 8 approaches (5 items each, 4 pro-construct + 1 reverse-coded) and 9 fields (4 items each). Scores are computed by a **deterministic ipsative algorithm** on the backend; the AI is used only to write personalized descriptions for each result.
 
 Both modes generate:
 
@@ -40,6 +40,7 @@ The result is informative and does not replace professional guidance, but works 
 
 - Two questionnaire modes (simple AI-scored and detailed Likert with deterministic scoring)
 - Items shuffled at runtime to reduce halo and carry-over effects
+- Reverse-coded items (1 per approach) to reduce construct transparency and flag inattentive responders
 - AI analysis with automatic fallback (Gemini → Groq)
 - Deterministic ipsative scoring (reproducible, free of acquiescence bias) for the detailed mode
 - Affinity ranking with 8 theoretical approaches and 9 fields of practice
@@ -290,6 +291,14 @@ The API issues JWTs both as an `HttpOnly` cookie (`psiencontra_auth`) and in the
 - **Authentication across origins**: combining cookie-based and Bearer-token flows to survive Safari/WebKit cross-site cookie restrictions; passing the OAuth token via URL fragment to keep it out of server logs
 - **Fullstack architecture**: clear separation between Next.js (App Router) and Go/Gin, communication via REST, GORM models and migrations
 - **Distributed deployment**: connecting Vercel and Railway, managing environment variables, CORS and Secure/SameSite cookies in production
+
+## Disclaimer & Privacy
+
+PsiEncontra is a **self-reflection tool for Psychology students**, not a psychological test under [CFP Resolution nº 09/2018](https://satepsi.cfp.org.br/). Results are informative and do not replace professional guidance, academic supervision, or psychotherapy. A plain-language privacy notice is served at [`/privacidade`](https://psiencontra.vercel.app/privacidade); the submit step in the questionnaire asks for explicit consent before responses are persisted.
+
+**Known gaps (portfolio-stage, not production-grade):**
+- No LGPD data-processing agreement with third-party AI providers; no automated data-erasure endpoint (requests handled manually via the e-mail listed in the privacy page).
+- No formal validation study for the detailed questionnaire (no published α, test-retest, or factor analysis on a Brazilian sample). Scores are face-valid but not psychometrically validated.
 
 ## License
 

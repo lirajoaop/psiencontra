@@ -50,6 +50,11 @@ func ComputeIpsativeScores(responses []schemas.Response, questions []Question) (
 		if err != nil {
 			continue
 		}
+		if q.Reversed {
+			// 1-5 Likert → flip so that endorsement of an anti-construct item
+			// lowers the mapped dimension.
+			rating = 6 - rating
+		}
 		mapping := q.Options[0].Mapping
 		if mapping == "" {
 			continue
