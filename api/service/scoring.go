@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"math"
 	"strconv"
 
 	"github.com/joaop/psiencontra/api/schemas"
@@ -115,7 +116,10 @@ func normalizeIpsative(ratingsByKey map[string][]float64) map[string]float64 {
 
 	// Step 4: linear normalization to [5, 95]. If all deviations are equal
 	// (the respondent rated every block item the same), return a flat 50 —
-	// there's no signal to differentiate preferences.
+	// there's no signal to differentiate preferences. Scores are rounded to
+	// integers: sub-integer precision is not psychometrically meaningful and
+	// float residue (e.g. 95.00000000000001) leaks into the AI prompt, PDF,
+	// and UI.
 	scores := make(map[string]float64, len(deviations))
 	span := maxDev - minDev
 	if span < 1e-9 {
@@ -125,7 +129,7 @@ func normalizeIpsative(ratingsByKey map[string][]float64) map[string]float64 {
 		return scores
 	}
 	for key, dev := range deviations {
-		scores[key] = 5 + 90*(dev-minDev)/span
+		scores[key] = math.Round(5 + 90*(dev-minDev)/span)
 	}
 	return scores
 }

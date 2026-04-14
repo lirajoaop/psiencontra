@@ -21,9 +21,9 @@ export default function ApproachCard({ name, score, description, color, rank }) 
           </span>
           <h4 className="font-bold text-violet-900 dark:text-violet-200">{name}</h4>
         </div>
-        <span className="text-2xl font-bold" style={{ color }}>{score}%</span>
+        <span className="text-2xl font-bold" style={{ color }}>{Math.round(score)}%</span>
       </div>
-      <ScoreBar score={score} color={color} />
+      <ScoreBar score={Math.round(score)} color={color} />
       {description && (
         <p className="text-sm text-gray-600 dark:text-gray-300 mt-3 leading-relaxed">{description}</p>
       )}
