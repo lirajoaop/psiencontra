@@ -164,7 +164,7 @@ export default function Questionario() {
               </p>
               <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                 <span className="flex items-center gap-1">
-                  <ClockIcon /> ~15 min
+                  <ClockIcon /> ~10–12 min
                 </span>
                 <span className="flex items-center gap-1">
                   <ListIcon /> 76 itens
