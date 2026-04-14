@@ -26,21 +26,29 @@ export default function Questionario() {
   const [answers, setAnswers] = useState({});
   const [direction, setDirection] = useState(1);
   const [loading, setLoading] = useState(false);
+
+  function selectType(type) {
+    setQuestionnaireType(type);
+    setLoading(true);
+  }
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!questionnaireType) return;
-    setLoading(true);
+    let cancelled = false;
     getQuestions(questionnaireType)
       .then((data) => {
+        if (cancelled) return;
         setQuestions(data);
         setLoading(false);
       })
       .catch((err) => {
+        if (cancelled) return;
         setError(err.message);
         setLoading(false);
       });
+    return () => { cancelled = true; };
   }, [questionnaireType]);
 
   const question = questions[current];
@@ -109,7 +117,7 @@ export default function Questionario() {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Simple */}
             <motion.button
-              onClick={() => setQuestionnaireType("simple")}
+              onClick={() => selectType("simple")}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="cursor-pointer text-left p-6 rounded-2xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-violet-400 dark:hover:border-violet-500 transition-all shadow-sm hover:shadow-lg"
@@ -135,7 +143,7 @@ export default function Questionario() {
 
             {/* Detailed */}
             <motion.button
-              onClick={() => setQuestionnaireType("detailed")}
+              onClick={() => selectType("detailed")}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="cursor-pointer text-left p-6 rounded-2xl border-2 border-violet-300 dark:border-violet-600 bg-gradient-to-br from-violet-50 to-white dark:from-violet-900/30 dark:to-gray-800 hover:border-violet-500 dark:hover:border-violet-400 transition-all shadow-sm hover:shadow-lg relative"
@@ -152,14 +160,14 @@ export default function Questionario() {
                 <h2 className="text-lg font-bold text-violet-900 dark:text-violet-200">Detalhado</h2>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                59 afirmações em escala Likert. Scoring determinístico e reprodutível, sem interferência da IA nos números.
+                76 afirmações em escala Likert. Scoring determinístico e reprodutível, sem interferência da IA nos números.
               </p>
               <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                 <span className="flex items-center gap-1">
                   <ClockIcon /> ~15 min
                 </span>
                 <span className="flex items-center gap-1">
-                  <ListIcon /> 59 itens
+                  <ListIcon /> 76 itens
                 </span>
               </div>
             </motion.button>
