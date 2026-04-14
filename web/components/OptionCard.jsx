@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import GlossaryText from "./GlossaryText";
 
 export default function OptionCard({ label, selected, onClick }) {
   return (
@@ -14,7 +15,7 @@ export default function OptionCard({ label, selected, onClick }) {
           : "border-gray-200 bg-white text-gray-700 hover:border-violet-300 hover:bg-violet-50/50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:border-violet-500 dark:hover:bg-violet-900/30"
       }`}
     >
-      <span className="text-sm md:text-base">{label}</span>
+      <span className="text-sm md:text-base"><GlossaryText>{label}</GlossaryText></span>
     </motion.button>
   );
 }

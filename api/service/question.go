@@ -11,9 +11,15 @@ type Option struct {
 type Question struct {
 	ID      int      `json:"id"`
 	Text    string   `json:"text"`
-	Type    string   `json:"type"`  // multiple_choice | open_ended
+	Type    string   `json:"type"`  // multiple_choice | open_ended | likert
 	Block   string   `json:"block"` // approaches | fields
 	Options []Option `json:"options,omitempty"`
+	// Reversed marks Likert items phrased *against* the construct. The scoring
+	// service flips the rating (6 - r for a 1-5 scale) before ipsativization,
+	// so endorsement of a reversed item lowers the affinity with the mapped
+	// construct. This reduces transparency and partially controls for response
+	// sets that survive ipsativization (e.g. central-tendency bias).
+	Reversed bool `json:"reversed,omitempty"`
 }
 
 type QuestionService struct{}

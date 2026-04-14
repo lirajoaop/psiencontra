@@ -44,6 +44,17 @@ export const FIELD_COLORS = {
   psicometria: "#8b5cf6",
 };
 
+export const APPROACH_AUTHORS = {
+  psicanalise: "Freud, Lacan, Winnicott",
+  fenomenologia: "Husserl, Heidegger, Sartre, Merleau-Ponty",
+  comportamental: "Skinner, Sidman, Hineline",
+  tcc: "Aaron Beck, Albert Ellis, Judith Beck",
+  junguiana: "Carl Jung, James Hillman, Marie-Louise von Franz",
+  gestalt: "Fritz Perls, Laura Perls, Paul Goodman",
+  socio_historica: "Vygotsky, Leontiev, Silvia Lane",
+  humanismo: "Carl Rogers, Abraham Maslow",
+};
+
 export const APPROACH_DESCRIPTIONS = {
   psicanalise: "Explora o inconsciente, os sonhos e os conflitos internos profundos.",
   fenomenologia: "Valoriza a experiência vivida, a liberdade e a busca por sentido.",

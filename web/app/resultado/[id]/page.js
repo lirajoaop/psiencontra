@@ -12,6 +12,7 @@ import { getResult, getPDFUrl } from "@/lib/api";
 import {
   APPROACH_LABELS,
   APPROACH_COLORS,
+  APPROACH_AUTHORS,
   FIELD_LABELS,
   FIELD_COLORS,
 } from "@/lib/constants";
@@ -158,6 +159,58 @@ export default function Resultado({ params }) {
             />
           ))}
         </div>
+
+        {/* Next Steps */}
+        <section className="rounded-2xl border border-violet-100 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 md:p-8 mb-10">
+          <h2 className="text-xl font-bold text-violet-900 dark:text-violet-200 mb-3">
+            Próximos passos
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-5">
+            Este resultado é um ponto de partida para reflexão — não é um teste
+            psicológico nem um veredito sobre sua carreira. Algumas formas de seguir
+            explorando:
+          </p>
+          <ul className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+            <li className="flex gap-3">
+              <span className="text-violet-600 dark:text-violet-400 font-bold">1.</span>
+              <span>
+                Converse com a <strong>coordenação do seu curso</strong> ou com um(a)
+                supervisor(a) sobre estes resultados — eles ajudam a situá-los frente à
+                sua trajetória.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-violet-600 dark:text-violet-400 font-bold">2.</span>
+              <span>
+                Busque <strong>estágios, eletivas ou grupos de estudo</strong> em{" "}
+                <strong>{sortedApproaches[0]?.label}</strong> e em{" "}
+                <strong>{sortedFields[0]?.label}</strong>, suas áreas de maior afinidade
+                neste questionário.
+              </span>
+            </li>
+            {APPROACH_AUTHORS[sortedApproaches[0]?.key] && (
+              <li className="flex gap-3">
+                <span className="text-violet-600 dark:text-violet-400 font-bold">
+                  3.
+                </span>
+                <span>
+                  Comece pelas leituras-fundadoras de{" "}
+                  <strong>{sortedApproaches[0].label}</strong>:{" "}
+                  {APPROACH_AUTHORS[sortedApproaches[0].key]}.
+                </span>
+              </li>
+            )}
+            <li className="flex gap-3">
+              <span className="text-violet-600 dark:text-violet-400 font-bold">
+                {APPROACH_AUTHORS[sortedApproaches[0]?.key] ? "4." : "3."}
+              </span>
+              <span>
+                Refaça o questionário <strong>daqui a alguns meses</strong>: interesses
+                tendem a se reorganizar com novas experiências práticas e leituras.
+              </span>
+            </li>
+          </ul>
+        </section>
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
