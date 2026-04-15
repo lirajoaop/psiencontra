@@ -26,5 +26,8 @@ func SetupRoutes(r *gin.Engine) {
 		v1.POST("/sessions/:id/responses", handler.SubmitResponses)
 		v1.GET("/sessions/:id/result", handler.GetResult)
 		v1.GET("/sessions/:id/pdf", handler.DownloadPDF)
+
+		// User-scoped history: only completed sessions belonging to the caller.
+		v1.GET("/user/sessions", RequireAuth(), handler.GetUserHistory)
 	}
 }

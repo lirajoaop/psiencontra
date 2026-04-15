@@ -58,6 +58,39 @@ func SubmitResponses(c *gin.Context) {
 	sendSuccess(c, result)
 }
 
+func GetUserHistory(c *gin.Context) {
+	userID, ok := UserIDFromContext(c)
+	if !ok {
+		sendError(c, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	sessions, err := SessionSvc.GetUserHistory(userID)
+	if err != nil {
+		sendError(c, http.StatusInternalServerError, "failed to fetch history")
+		return
+	}
+
+	// Slim DTO: preview cards only need the top-ranking approach/field, which
+	// the frontend derives from the score maps. Skipping explanation + details
+	// keeps the payload light even for users with many sessions.
+	out := make([]gin.H, 0, len(sessions))
+	for _, s := range sessions {
+		if s.Result == nil {
+			continue
+		}
+		out = append(out, gin.H{
+			"id":                 s.ID,
+			"created_at":         s.CreatedAt,
+			"questionnaire_type": s.QuestionnaireType,
+			"approach_scores":    s.Result.ApproachScores,
+			"field_scores":       s.Result.FieldScores,
+		})
+	}
+
+	sendSuccess(c, out)
+}
+
 func GetResult(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {

@@ -151,3 +151,7 @@ func (s *SessionService) GetResult(sessionID uuid.UUID) (*schemas.Result, error)
 func (s *SessionService) GetSession(sessionID uuid.UUID) (*schemas.Session, error) {
 	return s.sessionRepo.FindByID(sessionID)
 }
+
+func (s *SessionService) GetUserHistory(userID uuid.UUID) ([]schemas.Session, error) {
+	return s.sessionRepo.FindCompletedByUserID(userID)
+}

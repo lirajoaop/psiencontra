@@ -66,6 +66,10 @@ export function getPDFUrl(sessionId) {
   return `${API_URL}/sessions/${sessionId}/pdf`;
 }
 
+export function getUserHistory() {
+  return request("/user/sessions");
+}
+
 // --- Auth ---
 
 export function register({ email, password, name }) {

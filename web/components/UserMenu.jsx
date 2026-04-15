@@ -70,6 +70,16 @@ export default function UserMenu() {
             className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden z-30"
           >
             <button
+              onClick={() => {
+                setOpen(false);
+                router.push("/historico");
+              }}
+              className="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-700 cursor-pointer"
+            >
+              Meu histórico
+            </button>
+            <div className="h-px bg-gray-100 dark:bg-gray-700" />
+            <button
               onClick={async () => {
                 await logout();
                 setOpen(false);
