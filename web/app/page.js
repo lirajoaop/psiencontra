@@ -71,7 +71,7 @@ export default function Home() {
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           {[
-            { step: "1", title: "Responda", desc: "Escolha entre o questionário rápido (15 perguntas) ou detalhado (65 itens com escala Likert)." },
+            { step: "1", title: "Responda", desc: "Escolha entre o questionário rápido (15 perguntas) ou detalhado (76 itens com escala Likert)." },
             { step: "2", title: "IA Analisa", desc: "Nossa inteligência artificial analisa suas respostas e identifica padrões." },
             { step: "3", title: "Descubra", desc: "Veja seu ranking de afinidade com gráficos radar e explicações detalhadas." },
           ].map((item) => (
