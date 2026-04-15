@@ -276,7 +276,7 @@ export default function Questionario() {
       {/* Navigation */}
       <div className="bg-white dark:bg-gray-900 border-t border-violet-100 dark:border-gray-700 px-6 py-4">
         {isLast && (
-          <p className="max-w-2xl mx-auto text-xs text-gray-500 dark:text-gray-400 text-center mb-3">
+          <p className="max-w-2xl mx-auto text-xs text-gray-500 dark:text-gray-400 text-center text-balance mb-3">
             Ao clicar em <strong>Enviar</strong>, você concorda que suas respostas sejam
             usadas para gerar o seu resultado, conforme a{" "}
             <Link
