@@ -1,10 +1,42 @@
 "use client";
 
+import { useState } from "react";
+import MuiTooltip from "@mui/material/Tooltip";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
 import { GLOSSARY, GLOSSARY_REGEX } from "@/lib/glossary";
 
-// Wraps known Brazilian institutional acronyms (SUAS, CRAS, UBS, AVC, ...) in
-// <abbr> with a native tooltip so students unfamiliar with the terminology get
-// context on hover (desktop) or long-press (mobile).
+function AcronymTooltip({ acronym, definition }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <ClickAwayListener onClickAway={() => setOpen(false)}>
+      <MuiTooltip
+        title={definition}
+        placement="top"
+        arrow
+        open={open}
+        onClose={() => setOpen(false)}
+        disableFocusListener
+        disableTouchListener
+        slotProps={{
+          tooltip: { sx: { fontSize: 12, py: 0.75, px: 1.25, maxWidth: 280 } },
+        }}
+      >
+        <button
+          type="button"
+          aria-label={`Definição de ${acronym}`}
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+          onClick={() => setOpen((v) => !v)}
+          className="no-underline border-b border-dotted border-violet-400 dark:border-violet-500 cursor-help bg-transparent p-0 text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 rounded-sm"
+        >
+          {acronym}
+        </button>
+      </MuiTooltip>
+    </ClickAwayListener>
+  );
+}
+
 export default function GlossaryText({ children }) {
   if (typeof children !== "string") return children;
 
@@ -19,13 +51,11 @@ export default function GlossaryText({ children }) {
     }
     const acronym = match[1];
     parts.push(
-      <abbr
+      <AcronymTooltip
         key={`${acronym}-${match.index}`}
-        title={GLOSSARY[acronym]}
-        className="no-underline border-b border-dotted border-violet-400 dark:border-violet-500 cursor-help decoration-0"
-      >
-        {acronym}
-      </abbr>
+        acronym={acronym}
+        definition={GLOSSARY[acronym]}
+      />
     );
     lastIndex = match.index + acronym.length;
   }
