@@ -9,6 +9,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import Button from "@/components/Button";
 import ThemeToggle from "@/components/ThemeToggle";
 import { getResult, getPDFUrl } from "@/lib/api";
+import { useAuth } from "@/components/AuthProvider";
 import {
   APPROACH_LABELS,
   APPROACH_COLORS,
@@ -20,6 +21,7 @@ import {
 export default function Resultado({ params }) {
   const { id } = use(params);
   const router = useRouter();
+  const { user } = useAuth();
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -225,6 +227,11 @@ export default function Resultado({ params }) {
           <Button onClick={() => router.push("/questionario")} variant="secondary">
             Fazer Novamente
           </Button>
+          {user && (
+            <Button onClick={() => router.push("/historico")} variant="secondary">
+              Ver Histórico
+            </Button>
+          )}
           <Button onClick={() => router.push("/")} variant="ghost">
             Voltar ao Início
           </Button>

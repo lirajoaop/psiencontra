@@ -2,13 +2,17 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { History } from "lucide-react";
 import Button from "@/components/Button";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserMenu from "@/components/UserMenu";
+import { useAuth } from "@/components/AuthProvider";
 import { APPROACH_LABELS, APPROACH_DESCRIPTIONS, APPROACH_COLORS } from "@/lib/constants";
 
 export default function Home() {
   const router = useRouter();
+  const { user } = useAuth();
 
   const approaches = Object.entries(APPROACH_LABELS).map(([key, label]) => ({
     key,
@@ -63,6 +67,33 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      {/* History shortcut — only for authenticated users */}
+      {user && (
+        <section className="max-w-5xl mx-auto px-6 pt-10">
+          <Link
+            href="/historico"
+            className="flex items-center justify-between gap-4 p-5 rounded-2xl border border-violet-100 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-violet-300 dark:hover:border-violet-600 hover:shadow-md transition-all"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 flex items-center justify-center shrink-0">
+                <History size={20} aria-hidden="true" />
+              </div>
+              <div>
+                <p className="font-semibold text-violet-900 dark:text-violet-200">
+                  Seus questionários anteriores
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Compare como seus interesses se reorganizam ao longo do tempo.
+                </p>
+              </div>
+            </div>
+            <span className="text-violet-600 dark:text-violet-400 font-semibold text-sm whitespace-nowrap">
+              Ver histórico →
+            </span>
+          </Link>
+        </section>
+      )}
 
       {/* How it works */}
       <section className="max-w-5xl mx-auto px-6 py-16">

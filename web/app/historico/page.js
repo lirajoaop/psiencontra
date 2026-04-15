@@ -151,7 +151,7 @@ export default function HistoricoPage() {
                       </div>
                       <ChevronRight
                         size={20}
-                        className="text-gray-400 dark:text-gray-500 flex-shrink-0"
+                        className="text-gray-400 dark:text-gray-500 shrink-0"
                         aria-hidden="true"
                       />
                     </div>
