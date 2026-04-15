@@ -75,6 +75,39 @@ export default function Questionario() {
     }
   }
 
+  useEffect(() => {
+    if (!question) return;
+    if (question.type !== "likert") return;
+
+    function onKeyDown(e) {
+      const tag = e.target?.tagName;
+      if (tag === "TEXTAREA" || tag === "INPUT" || e.target?.isContentEditable) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+      if (["1", "2", "3", "4", "5"].includes(e.key)) {
+        e.preventDefault();
+        setAnswers((prev) => ({ ...prev, [question.id]: e.key }));
+        return;
+      }
+
+      if (e.key === "Enter") {
+        const hasAns = answers[question.id] != null && answers[question.id] !== "";
+        if (!hasAns) return;
+        e.preventDefault();
+        if (isLast) {
+          const allDone = questions.every((q) => answers[q.id] != null && answers[q.id] !== "");
+          if (allDone && !submitting) handleSubmit();
+        } else {
+          setDirection(1);
+          setCurrent((c) => c + 1);
+        }
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [question, answers, isLast, questions, submitting]);
+
   async function handleSubmit() {
     setSubmitting(true);
     setError(null);
