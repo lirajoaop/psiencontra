@@ -249,7 +249,13 @@ export default function Questionario() {
       <div className="bg-white dark:bg-gray-900 border-b border-violet-100 dark:border-gray-700 px-6 py-4">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-3">
-            <h1 className="text-lg font-bold text-violet-900 dark:text-violet-200">PsiEncontra</h1>
+            <Link
+              href="/"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 hover:bg-violet-200 dark:hover:bg-violet-800 transition-colors text-sm font-medium"
+            >
+              <ArrowLeft size={18} aria-hidden="true" />
+              Início
+            </Link>
             <div className="flex items-center gap-3">
               <span className="text-xs text-violet-400 bg-violet-50 dark:bg-violet-900/50 dark:text-violet-300 px-2 py-1 rounded-full">
                 {blockLabel}
