@@ -41,8 +41,13 @@ func SubmitResponses(c *gin.Context) {
 		return
 	}
 
+	const maxAnswerLen = 500
 	var inputs []service.SubmitResponseInput
 	for _, r := range req.Responses {
+		if len([]rune(r.AnswerValue)) > maxAnswerLen {
+			sendError(c, http.StatusBadRequest, "answer exceeds 500 character limit")
+			return
+		}
 		inputs = append(inputs, service.SubmitResponseInput{
 			QuestionID:  r.QuestionID,
 			AnswerValue: r.AnswerValue,

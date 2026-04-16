@@ -38,12 +38,22 @@ export default function QuestionCard({ question, answer, onAnswer, direction }) 
             onSelect={onAnswer}
           />
         ) : (
-          <textarea
-            value={answer || ""}
-            onChange={(e) => onAnswer(e.target.value)}
-            placeholder="Escreva sua resposta aqui..."
-            className="w-full h-36 p-4 rounded-xl border-2 border-violet-200 focus:border-violet-500 focus:outline-none resize-none text-gray-700 bg-white transition-colors dark:bg-gray-800 dark:border-violet-700 dark:text-gray-200 dark:focus:border-violet-400 dark:placeholder-gray-500"
-          />
+          <div>
+            <textarea
+              value={answer || ""}
+              onChange={(e) => onAnswer(e.target.value.slice(0, 500))}
+              maxLength={500}
+              placeholder="Escreva sua resposta aqui..."
+              className="w-full h-36 p-4 rounded-xl border-2 border-violet-200 focus:border-violet-500 focus:outline-none resize-none text-gray-700 bg-white transition-colors dark:bg-gray-800 dark:border-violet-700 dark:text-gray-200 dark:focus:border-violet-400 dark:placeholder-gray-500"
+            />
+            <p className={`text-xs text-right mt-1 transition-colors ${
+              (answer || "").length >= 450
+                ? "text-red-500 dark:text-red-400 font-medium"
+                : "text-gray-400 dark:text-gray-500"
+            }`}>
+              {(answer || "").length}/500
+            </p>
+          </div>
         )}
       </motion.div>
     </AnimatePresence>
