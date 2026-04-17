@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
@@ -12,6 +12,8 @@ import { getGoogleLoginURL } from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,7 +35,7 @@ export default function LoginPage() {
     setSubmitting(true);
     try {
       await login({ email, password });
-      router.push("/");
+      router.push(redirectTo);
     } catch (err) {
       if (err.status === 401) {
         setError("E-mail ou senha incorretos.");
@@ -125,7 +127,7 @@ export default function LoginPage() {
 
         <p className="text-sm text-center text-gray-600 dark:text-gray-400 mt-6">
           Ainda não tem conta?{" "}
-          <Link href="/cadastro" className="text-violet-600 dark:text-violet-400 font-semibold hover:underline">
+          <Link href={redirectTo === "/" ? "/cadastro" : `/cadastro?redirect=${encodeURIComponent(redirectTo)}`} className="text-violet-600 dark:text-violet-400 font-semibold hover:underline">
             Cadastre-se
           </Link>
         </p>

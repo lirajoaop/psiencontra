@@ -24,6 +24,16 @@ func (r *SessionRepo) FindByID(id uuid.UUID) (*schemas.Session, error) {
 	return &s, err
 }
 
+// ClaimAnonymous sets user_id on a session that currently has no owner.
+// Returns the number of rows affected so the caller can distinguish
+// "session not found / already owned" from a successful claim.
+func (r *SessionRepo) ClaimAnonymous(sessionID, userID uuid.UUID) (int64, error) {
+	tx := r.DB.Model(&schemas.Session{}).
+		Where("id = ? AND user_id IS NULL", sessionID).
+		Update("user_id", userID)
+	return tx.RowsAffected, tx.Error
+}
+
 // FindCompletedByUserID returns the user's sessions that have a Result
 // attached, newest first. Sessions without a Result (abandoned mid-flow or
 // where AI analysis failed) are filtered out at the SQL level via INNER JOIN

@@ -35,6 +35,9 @@ func SetupRoutes(r *gin.Engine) {
 		// Submit responses triggers AI calls — stricter limit: 5 req/min.
 		v1.POST("/sessions/:id/responses", RateLimit(5, 2), handler.SubmitResponses)
 
+		// Claim: link an anonymous session to an authenticated user.
+		v1.POST("/sessions/:id/claim", RequireAuth(), handler.ClaimSession)
+
 		v1.GET("/sessions/:id/result", handler.GetResult)
 		v1.GET("/sessions/:id/pdf", handler.DownloadPDF)
 

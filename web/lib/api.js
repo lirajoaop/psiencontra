@@ -66,6 +66,10 @@ export function getPDFUrl(sessionId) {
   return `${API_URL}/sessions/${sessionId}/pdf`;
 }
 
+export function claimSession(sessionId) {
+  return request(`/sessions/${sessionId}/claim`, { method: "POST" });
+}
+
 export function getUserHistory() {
   return request("/user/sessions");
 }

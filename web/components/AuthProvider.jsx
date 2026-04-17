@@ -1,8 +1,22 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { getMe, login as apiLogin, logout as apiLogout, register as apiRegister } from "@/lib/api";
+import { getMe, login as apiLogin, logout as apiLogout, register as apiRegister, claimSession } from "@/lib/api";
 import { clearToken, getToken, setToken } from "@/lib/auth-token";
+
+const PENDING_CLAIM_KEY = "psiencontra_pending_claim";
+
+export function setPendingClaim(sessionId) {
+  localStorage.setItem(PENDING_CLAIM_KEY, sessionId);
+}
+
+export function getPendingClaim() {
+  return localStorage.getItem(PENDING_CLAIM_KEY);
+}
+
+export function clearPendingClaim() {
+  localStorage.removeItem(PENDING_CLAIM_KEY);
+}
 
 const AuthContext = createContext(null);
 
@@ -17,17 +31,23 @@ export default function AuthProvider({ children }) {
     if (!getToken()) {
       setUser(null);
       setLoading(false);
-      return;
+      return null;
     }
     try {
       const me = await getMe();
       setUser(me);
+      // Claim any pending anonymous session (Google OAuth lands here via
+      // refresh() rather than login()).
+      const sessionId = getPendingClaim();
+      if (sessionId) {
+        try { await claimSession(sessionId); } catch { /* best-effort */ }
+        clearPendingClaim();
+      }
+      return sessionId;
     } catch {
-      // Token is present but rejected by the server (expired, signed with a
-      // different secret, deleted user, etc.). Drop it so we don't keep
-      // sending an invalid Authorization header on every subsequent request.
       clearToken();
       setUser(null);
+      return null;
     } finally {
       setLoading(false);
     }
@@ -37,19 +57,36 @@ export default function AuthProvider({ children }) {
     refresh();
   }, [refresh]);
 
+  // After login/register, if there's a pending anonymous session, claim it
+  // so the result gets linked to the new account. Best-effort: if the claim
+  // fails (already owned, network error) we still complete the login.
+  const tryClaimPending = useCallback(async () => {
+    const sessionId = getPendingClaim();
+    if (!sessionId) return null;
+    try {
+      await claimSession(sessionId);
+    } catch {
+      // ignore — session may already be claimed or deleted
+    }
+    clearPendingClaim();
+    return sessionId;
+  }, []);
+
   const login = useCallback(async (credentials) => {
     const data = await apiLogin(credentials);
     if (data.token) setToken(data.token);
     setUser(data.user);
+    await tryClaimPending();
     return data.user;
-  }, []);
+  }, [tryClaimPending]);
 
   const register = useCallback(async (credentials) => {
     const data = await apiRegister(credentials);
     if (data.token) setToken(data.token);
     setUser(data.user);
+    await tryClaimPending();
     return data.user;
-  }, []);
+  }, [tryClaimPending]);
 
   const logout = useCallback(async () => {
     // Best-effort: ask the backend to clear its cookie too. If the network

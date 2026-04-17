@@ -8,8 +8,9 @@ import ApproachCard from "@/components/ApproachCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Button from "@/components/Button";
 import ThemeToggle from "@/components/ThemeToggle";
-import { getResult, getPDFUrl } from "@/lib/api";
-import { useAuth } from "@/components/AuthProvider";
+import Link from "next/link";
+import { getResult, getPDFUrl, getGoogleLoginURL } from "@/lib/api";
+import { useAuth, setPendingClaim } from "@/components/AuthProvider";
 import {
   APPROACH_LABELS,
   APPROACH_COLORS,
@@ -21,10 +22,11 @@ import {
 export default function Resultado({ params }) {
   const { id } = use(params);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   useEffect(() => {
     getResult(id)
@@ -116,6 +118,46 @@ export default function Resultado({ params }) {
       </div>
 
       <div className="max-w-5xl mx-auto px-6 mt-8">
+        {/* Save results banner — shown only for anonymous users */}
+        {!authLoading && !user && !bannerDismissed && (
+          <motion.section
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/40 p-6 mb-8"
+          >
+            <h3 className="text-lg font-bold text-violet-900 dark:text-violet-200 mb-1">
+              Salve seus resultados
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-5">
+              Crie uma conta ou faça login para guardar este resultado no seu histórico
+              e acessá-lo a qualquer momento.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={`/cadastro?redirect=/resultado/${id}`}
+                onClick={() => setPendingClaim(id)}
+                className="px-5 py-2.5 rounded-xl font-semibold bg-violet-600 text-white hover:bg-violet-700 transition-colors text-sm text-center"
+              >
+                Criar conta
+              </Link>
+              <Link
+                href={`/entrar?redirect=/resultado/${id}`}
+                onClick={() => setPendingClaim(id)}
+                className="px-5 py-2.5 rounded-xl font-semibold border-2 border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 hover:border-violet-500 dark:hover:border-violet-500 transition-colors text-sm text-center"
+              >
+                Já tenho conta
+              </Link>
+              <button
+                type="button"
+                onClick={() => setBannerDismissed(true)}
+                className="px-5 py-2.5 rounded-xl text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors cursor-pointer"
+              >
+                Continuar sem conta
+              </button>
+            </div>
+          </motion.section>
+        )}
+
         {/* Radar Charts */}
         <div className="grid md:grid-cols-2 gap-6 mb-10">
           <RadarChartResult

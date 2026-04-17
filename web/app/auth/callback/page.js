@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Button from "@/components/Button";
-import { useAuth } from "@/components/AuthProvider";
+import { useAuth, getPendingClaim } from "@/components/AuthProvider";
 import { getToken, setToken } from "@/lib/auth-token";
 
 const ERROR_MESSAGES = {
@@ -48,12 +48,18 @@ export default function AuthCallback() {
     const hashParams = new URLSearchParams(hash);
     const token = hashParams.get("token");
 
+    // Capture before refresh() clears it during the claim flow.
+    const pendingSession = getPendingClaim();
+    const redirectAfterAuth = () => {
+      router.push(pendingSession ? `/resultado/${pendingSession}` : "/");
+    };
+
     // If there's no token in the fragment, we may already be authenticated
     // from a prior tab (Strict Mode double-mount, browser back/forward, etc).
     // Trust the existing localStorage token instead of flashing an error.
     if (!token) {
       if (getToken()) {
-        refresh().then(() => router.push("/"));
+        refresh().then(redirectAfterAuth);
         return;
       }
       setError(ERROR_MESSAGES.no_token);
@@ -65,7 +71,7 @@ export default function AuthCallback() {
     // bar / browser history. replaceState avoids a navigation event.
     window.history.replaceState(null, "", window.location.pathname);
 
-    refresh().then(() => router.push("/"));
+    refresh().then(redirectAfterAuth);
   }, [params, refresh, router]);
 
   if (error) {

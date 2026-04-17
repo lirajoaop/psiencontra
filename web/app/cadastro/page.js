@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
@@ -12,6 +12,8 @@ import { getGoogleLoginURL } from "@/lib/api";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
   const { register } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -29,7 +31,7 @@ export default function RegisterPage() {
     setSubmitting(true);
     try {
       await register({ email, password, name });
-      router.push("/");
+      router.push(redirectTo);
     } catch (err) {
       setError(err.message || "Falha ao criar conta");
     } finally {
@@ -131,7 +133,7 @@ export default function RegisterPage() {
 
         <p className="text-sm text-center text-gray-600 dark:text-gray-400 mt-6">
           Já tem conta?{" "}
-          <Link href="/entrar" className="text-violet-600 dark:text-violet-400 font-semibold hover:underline">
+          <Link href={redirectTo === "/" ? "/entrar" : `/entrar?redirect=${encodeURIComponent(redirectTo)}`} className="text-violet-600 dark:text-violet-400 font-semibold hover:underline">
             Entrar
           </Link>
         </p>

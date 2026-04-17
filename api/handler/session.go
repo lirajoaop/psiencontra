@@ -96,6 +96,27 @@ func GetUserHistory(c *gin.Context) {
 	sendSuccess(c, out)
 }
 
+func ClaimSession(c *gin.Context) {
+	sessionID, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		sendError(c, http.StatusBadRequest, "invalid session id")
+		return
+	}
+
+	userID, ok := UserIDFromContext(c)
+	if !ok {
+		sendError(c, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	if err := SessionSvc.ClaimSession(sessionID, userID); err != nil {
+		sendError(c, http.StatusConflict, err.Error())
+		return
+	}
+
+	sendSuccess(c, gin.H{"claimed": true})
+}
+
 func GetResult(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {

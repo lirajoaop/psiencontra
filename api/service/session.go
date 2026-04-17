@@ -152,6 +152,19 @@ func (s *SessionService) GetSession(sessionID uuid.UUID) (*schemas.Session, erro
 	return s.sessionRepo.FindByID(sessionID)
 }
 
+// ClaimSession associates an anonymous session with the given user.
+// Returns an error when the session does not exist or already has an owner.
+func (s *SessionService) ClaimSession(sessionID, userID uuid.UUID) error {
+	n, err := s.sessionRepo.ClaimAnonymous(sessionID, userID)
+	if err != nil {
+		return fmt.Errorf("failed to claim session: %w", err)
+	}
+	if n == 0 {
+		return fmt.Errorf("session not found or already claimed")
+	}
+	return nil
+}
+
 func (s *SessionService) GetUserHistory(userID uuid.UUID) ([]schemas.Session, error) {
 	return s.sessionRepo.FindCompletedByUserID(userID)
 }

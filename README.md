@@ -47,7 +47,7 @@ The result is informative and does not replace professional guidance, but works 
 - Interactive radar charts for visualizing the results
 - Full result export to PDF
 - **Authentication**: email/password and Google OAuth (JWT delivered via cookie or `Authorization: Bearer` header)
-- **Anonymous flow**: sessions can be created without an account
+- **Anonymous flow**: sessions can be created without an account; after completing the questionnaire, anonymous users are offered a login/register prompt to claim the session and save results to their account
 - **Questionnaire history**: authenticated users can view all past sessions with top approach/field badges and compare results over time
 - **Rate limiting**: token-bucket per-IP rate limiting on all API routes (stricter limits on auth and response-submission endpoints)
 - **Input validation**: 500-character limit on open-ended answers (enforced on both frontend and backend)
@@ -160,6 +160,7 @@ GET    /api/v1/auth/google/callback
 
 POST   /api/v1/sessions                    # optional auth (anonymous-friendly)
 POST   /api/v1/sessions/:id/responses
+POST   /api/v1/sessions/:id/claim          # requires auth — links anonymous session to user
 GET    /api/v1/sessions/:id/result
 GET    /api/v1/sessions/:id/pdf
 
@@ -199,6 +200,17 @@ AI returns scores + descriptions          Backend computes ipsative scores;
 API persists the session/result and returns it to the frontend
                         |
 Radar charts, ranking and explanations are displayed
+                        |
+        ┌───────────────┴───────────────┐
+        |                               |
+  Logged-in user:                 Anonymous user:
+  result saved to account         banner offers login/register
+                                        |
+                                  signs in → session claimed
+                                  via POST /sessions/:id/claim
+                                        |
+                                  result linked to account
+        └───────────────┬───────────────┘
                         |
 Student can export the full result as a PDF
         |
