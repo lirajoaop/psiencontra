@@ -226,7 +226,7 @@ export default function Questionario() {
   }
 
   if (submitting) {
-    return <LoadingSpinner message="Analisando suas respostas com IA..." />;
+    return <LoadingSpinner message={questionnaireType === "detailed" ? "Calculando seu perfil e gerando descrições..." : "Analisando suas respostas com IA..."} />;
   }
 
   if (error) {
