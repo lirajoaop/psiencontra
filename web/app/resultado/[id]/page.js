@@ -123,27 +123,27 @@ export default function Resultado({ params }) {
           <motion.section
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/40 p-6 mb-8"
+            className="rounded-2xl border border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950/40 p-6 md:p-8 mb-8 text-center"
           >
-            <h3 className="text-lg font-bold text-violet-900 dark:text-violet-200 mb-1">
+            <h3 className="text-lg font-bold text-violet-900 dark:text-violet-200 mb-2">
               Salve seus resultados
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-5">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-5 max-w-lg mx-auto">
               Crie uma conta ou faça login para guardar este resultado no seu histórico
               e acessá-lo a qualquer momento.
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 justify-center">
               <Link
                 href={`/cadastro?redirect=/resultado/${id}`}
                 onClick={() => setPendingClaim(id)}
-                className="px-5 py-2.5 rounded-xl font-semibold bg-violet-600 text-white hover:bg-violet-700 transition-colors text-sm text-center"
+                className="px-6 py-2.5 rounded-xl font-semibold bg-violet-600 text-white hover:bg-violet-700 shadow-lg shadow-violet-200 dark:shadow-violet-900/50 transition-all text-sm text-center"
               >
                 Criar conta
               </Link>
               <Link
                 href={`/entrar?redirect=/resultado/${id}`}
                 onClick={() => setPendingClaim(id)}
-                className="px-5 py-2.5 rounded-xl font-semibold border-2 border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 hover:border-violet-500 dark:hover:border-violet-500 transition-colors text-sm text-center"
+                className="px-6 py-2.5 rounded-xl font-semibold border-2 border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 hover:border-violet-500 dark:hover:border-violet-500 transition-colors text-sm text-center"
               >
                 Já tenho conta
               </Link>
