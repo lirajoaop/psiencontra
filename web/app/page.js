@@ -127,7 +127,7 @@ export default function Home() {
       <section className="bg-white dark:bg-gray-900 py-16">
         <div className="max-w-5xl mx-auto px-6">
           <h2 className="text-2xl md:text-3xl font-bold text-violet-900 dark:text-violet-200 text-center mb-12">
-            As 8 Abordagens Teóricas
+            Abordagens que Exploramos
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {approaches.map((a, i) => (
