@@ -125,7 +125,7 @@ export default function LoginPage() {
 
         <p className="text-sm text-center text-gray-600 dark:text-gray-400 mt-6">
           Ainda não tem conta?{" "}
-          <Link href="/register" className="text-violet-600 dark:text-violet-400 font-semibold hover:underline">
+          <Link href="/cadastro" className="text-violet-600 dark:text-violet-400 font-semibold hover:underline">
             Cadastre-se
           </Link>
         </p>

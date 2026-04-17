@@ -48,6 +48,11 @@ The result is informative and does not replace professional guidance, but works 
 - Full result export to PDF
 - **Authentication**: email/password and Google OAuth (JWT delivered via cookie or `Authorization: Bearer` header)
 - **Anonymous flow**: sessions can be created without an account
+- **Questionnaire history**: authenticated users can view all past sessions with top approach/field badges and compare results over time
+- **Rate limiting**: token-bucket per-IP rate limiting on all API routes (stricter limits on auth and response-submission endpoints)
+- **Input validation**: 500-character limit on open-ended answers (enforced on both frontend and backend)
+- **Keyboard navigation**: Likert scale questions support 1–5 key selection and Enter to advance
+- **Contextual tooltips**: Material-UI tooltips with glossary hints for approaches and fields
 - Dark mode with persistence via localStorage
 - Responsive design for desktop and mobile
 - Smooth animations with Framer Motion
@@ -91,6 +96,8 @@ See [`api/service/scoring.go`](api/service/scoring.go) for the implementation.
 - **Next.js 16** — React framework with App Router
 - **React 19** — UI library
 - **Tailwind CSS 4** — utility-first styling with dark mode
+- **Material-UI (MUI) 9** — Tooltip, ClickAwayListener
+- **Emotion** — CSS-in-JS engine (required by MUI)
 - **Framer Motion** — animations and transitions
 - **Recharts** — interactive radar charts
 
@@ -120,18 +127,17 @@ See [`api/service/scoring.go`](api/service/scoring.go) for the implementation.
 psiencontra/
 ├── api/                        # Go backend
 │   ├── config/                 # Configuration (database, env, logger)
-│   ├── handler/                # HTTP controllers (auth, sessions, questions, pdf)
+│   ├── handler/                # HTTP controllers (auth, sessions, questions, pdf, history)
 │   ├── repository/             # Data access (users, sessions, responses, results)
-│   ├── router/                 # Route definitions, CORS and auth middleware
+│   ├── router/                 # Route definitions, CORS, auth and rate-limit middleware
 │   ├── schemas/                # GORM models (User, Session, Response, Result)
 │   ├── service/                # Business logic (AI, PDF, questions, scoring, auth, OAuth)
 │   ├── Dockerfile
 │   ├── main.go
 │   └── go.mod
 ├── web/                        # Next.js frontend
-│   ├── app/                    # Routes: landing, login, register, auth/callback,
-│   │                           #         questionario, resultado/[id]
-│   ├── components/             # UI (LikertScale, RadarChartResult, AuthProvider, ...)
+│   ├── app/                    # App Router pages (auth, questionnaire, results, history, privacy)
+│   ├── components/             # UI (LikertScale, RadarChartResult, Tooltip, AuthProvider, ...)
 │   ├── lib/                    # API client, auth-token, constants
 │   └── package.json
 ├── docker-compose.yml          # Local orchestration (PostgreSQL + API)
@@ -156,7 +162,19 @@ POST   /api/v1/sessions                    # optional auth (anonymous-friendly)
 POST   /api/v1/sessions/:id/responses
 GET    /api/v1/sessions/:id/result
 GET    /api/v1/sessions/:id/pdf
+
+GET    /api/v1/user/sessions               # requires auth — questionnaire history
 ```
+
+#### Rate Limiting
+
+All routes are protected by per-IP token-bucket rate limiting:
+
+| Scope | Limit | Burst |
+|---|---|---|
+| Global (default) | 60 req/min | 10 |
+| Auth endpoints | 10 req/min | 5 |
+| Response submission | 5 req/min | 2 |
 
 ### Application Flow
 
@@ -183,6 +201,8 @@ API persists the session/result and returns it to the frontend
 Radar charts, ranking and explanations are displayed
                         |
 Student can export the full result as a PDF
+        |
+(If authenticated) can view history at /historico and compare past results
 ```
 
 ## How to Run the Project
@@ -289,6 +309,7 @@ The API issues JWTs both as an `HttpOnly` cookie (`psiencontra_auth`) and in the
 - **Generative AIs**: crafting prompts for structured JSON, dealing with token limits, and falling back across providers
 - **Psychometrics in code**: separating deterministic scoring (ipsative normalization, reproducible, audit-friendly) from AI-generated descriptions, so numeric results never depend on model variability
 - **Authentication across origins**: combining cookie-based and Bearer-token flows to survive Safari/WebKit cross-site cookie restrictions; passing the OAuth token via URL fragment to keep it out of server logs
+- **Rate limiting**: implementing per-IP token-bucket rate limiting with automatic stale-entry cleanup to protect AI-backed endpoints from abuse
 - **Fullstack architecture**: clear separation between Next.js (App Router) and Go/Gin, communication via REST, GORM models and migrations
 - **Distributed deployment**: connecting Vercel and Railway, managing environment variables, CORS and Secure/SameSite cookies in production
 

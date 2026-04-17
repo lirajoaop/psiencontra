@@ -44,7 +44,7 @@ export default function HistoricoPage() {
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
-      router.replace("/login");
+      router.replace("/entrar");
       return;
     }
     getUserHistory()

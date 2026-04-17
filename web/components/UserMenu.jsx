@@ -30,7 +30,7 @@ export default function UserMenu() {
   if (loading || !user) {
     return (
       <button
-        onClick={() => router.push("/login")}
+        onClick={() => router.push("/entrar")}
         className="px-4 py-2 rounded-lg bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 hover:bg-violet-200 dark:hover:bg-violet-800 transition-colors text-sm font-semibold cursor-pointer"
       >
         Entrar

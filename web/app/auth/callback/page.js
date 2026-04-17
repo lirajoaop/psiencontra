@@ -72,7 +72,7 @@ export default function AuthCallback() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 px-6">
         <p className="text-red-600 dark:text-red-400 text-center">{error}</p>
-        <Button onClick={() => router.push("/login")} variant="secondary">
+        <Button onClick={() => router.push("/entrar")} variant="secondary">
           Voltar para login
         </Button>
       </div>
