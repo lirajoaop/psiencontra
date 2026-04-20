@@ -14,9 +14,11 @@ import { getResult, getPDFUrl } from "@/lib/api";
 import { useAuth, setPendingClaim } from "@/components/AuthProvider";
 import {
   APPROACH_LABELS,
+  APPROACH_LABELS_SHORT,
   APPROACH_COLORS,
   APPROACH_AUTHORS,
   FIELD_LABELS,
+  FIELD_LABELS_SHORT,
   FIELD_COLORS,
 } from "@/lib/constants";
 
@@ -171,13 +173,13 @@ export default function ResultadoClient({ id, initialResult = null }) {
           <RadarChartResult
             title="Abordagens Teóricas"
             scores={approachScores}
-            labels={APPROACH_LABELS}
+            labels={APPROACH_LABELS_SHORT}
             color="#7c3aed"
           />
           <RadarChartResult
             title="Campos de Atuação"
             scores={fieldScores}
-            labels={FIELD_LABELS}
+            labels={FIELD_LABELS_SHORT}
             color="#2563eb"
           />
         </div>

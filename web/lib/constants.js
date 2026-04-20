@@ -9,6 +9,17 @@ export const APPROACH_LABELS = {
   humanismo: "Humanismo (ACP)",
 };
 
+export const APPROACH_LABELS_SHORT = {
+  psicanalise: "Psicanálise",
+  fenomenologia: "Fenomenologia-Existencial",
+  comportamental: "Análise do Comp.",
+  tcc: "TCC",
+  junguiana: "Junguiana",
+  gestalt: "Gestalt",
+  socio_historica: "Sócio-Histórica",
+  humanismo: "Humanismo",
+};
+
 export const FIELD_LABELS = {
   clinica: "Psicologia Clínica",
   organizacional: "Psicologia Organizacional",
@@ -17,6 +28,18 @@ export const FIELD_LABELS = {
   saude: "Psicologia da Saúde/Hospitalar",
   juridica: "Psicologia Jurídica",
   esporte: "Psicologia do Esporte",
+  neuropsicologia: "Neuropsicologia",
+  psicometria: "Psicometria",
+};
+
+export const FIELD_LABELS_SHORT = {
+  clinica: "Clínica",
+  organizacional: "Organizacional",
+  escolar: "Escolar/Educacional",
+  social: "Social e Comunitária",
+  saude: "Saúde/Hospitalar",
+  juridica: "Jurídica",
+  esporte: "Esporte",
   neuropsicologia: "Neuropsicologia",
   psicometria: "Psicometria",
 };

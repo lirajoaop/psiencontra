@@ -25,11 +25,11 @@ export default function RadarChartResult({ title, scores, labels, color = "#7c3a
     <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-violet-100 dark:border-gray-700">
       <h3 className="text-lg font-bold text-violet-900 dark:text-violet-200 mb-4 text-center">{title}</h3>
       <ResponsiveContainer width="100%" height={350}>
-        <RadarChart data={data} cx="50%" cy="50%" outerRadius="70%">
+        <RadarChart data={data} cx="50%" cy="50%" outerRadius="62%">
           <PolarGrid stroke={isDark ? "#374151" : "#e5e7eb"} />
           <PolarAngleAxis
             dataKey="subject"
-            tick={{ fontSize: 10, fill: isDark ? "#d1d5db" : "#4b5563" }}
+            tick={{ fontSize: 11, fill: isDark ? "#d1d5db" : "#4b5563" }}
             className="text-xs"
           />
           <PolarRadiusAxis
