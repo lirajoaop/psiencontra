@@ -53,7 +53,9 @@ The result is informative and does not replace professional guidance, but works 
 - **Input validation**: 500-character limit on open-ended answers (enforced on both frontend and backend)
 - **Keyboard navigation**: Likert scale questions support 1–5 key selection and Enter to advance
 - **Contextual tooltips**: Material-UI tooltips with glossary hints for approaches and fields
+- **Social sharing**: share results on WhatsApp, X (Twitter), copy link, or generate a 1080×1920 PNG (with QR code) for Instagram/WhatsApp Stories via the Web Share API (with download fallback)
 - Dark mode with persistence via localStorage
+- **Mobile-optimized layout**: radar charts are hidden on narrow viewports (the ranking lists remain) to avoid label truncation; the questionnaire progress bar and block-label pill are repositioned so they never collide on small screens
 - Responsive design for desktop and mobile
 - Smooth animations with Framer Motion
 
@@ -100,6 +102,8 @@ See [`api/service/scoring.go`](api/service/scoring.go) for the implementation.
 - **Emotion** — CSS-in-JS engine (required by MUI)
 - **Framer Motion** — animations and transitions
 - **Recharts** — interactive radar charts
+- **`next/og` (ImageResponse)** — server-rendered 1080×1920 PNG for Instagram Story sharing
+- **`qrcode`** — QR code embedded in the shareable Story image
 
 ### Backend
 - **Go** — server language
@@ -165,6 +169,12 @@ GET    /api/v1/sessions/:id/result
 GET    /api/v1/sessions/:id/pdf
 
 GET    /api/v1/user/sessions               # requires auth — questionnaire history
+```
+
+#### Frontend-only routes (Next.js)
+
+```
+GET    /api/share/:id/story.png            # server-rendered 1080×1920 PNG for Story sharing
 ```
 
 #### Rate Limiting
