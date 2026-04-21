@@ -261,14 +261,11 @@ export default function Questionario() {
             <h1 className="text-lg font-bold text-violet-900 dark:text-violet-200 text-center">
               PsiEncontra
             </h1>
-            <div className="flex items-center gap-3 justify-self-end">
-              <span className="text-xs text-violet-400 bg-violet-50 dark:bg-violet-900/50 dark:text-violet-300 px-2 py-1 rounded-full">
-                {blockLabel}
-              </span>
+            <div className="justify-self-end">
               <ThemeToggle />
             </div>
           </div>
-          <ProgressBar current={current} total={questions.length} />
+          <ProgressBar current={current} total={questions.length} blockLabel={blockLabel} />
         </div>
       </div>
 
