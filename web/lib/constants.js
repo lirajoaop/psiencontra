@@ -88,3 +88,25 @@ export const APPROACH_DESCRIPTIONS = {
   socio_historica: "Compreende o ser humano a partir do contexto social e histórico.",
   humanismo: "Valoriza a empatia, a aceitação incondicional e o potencial de crescimento da pessoa.",
 };
+
+export const APPROACH_HERO = {
+  psicanalise: "Psicanálise",
+  fenomenologia: "Fenomenologia-Existencial",
+  comportamental: "Análise do Comportamento",
+  tcc: "Terapia Cognitivo-Comportamental",
+  junguiana: "Psicologia Analítica",
+  gestalt: "Gestalt-terapia",
+  socio_historica: "Psicologia Sócio-Histórica",
+  humanismo: "Humanismo",
+};
+
+export const APPROACH_TAGLINES = {
+  psicanalise: "Escuta do inconsciente, da palavra e do sintoma como cifra.",
+  fenomenologia: "A experiência vivida, a liberdade e a busca por sentido.",
+  comportamental: "Ciência do comportamento, contingências e ambiente.",
+  tcc: "Pensamentos, crenças e emoções reestruturados em evidência.",
+  junguiana: "Arquétipos, símbolos e o caminho da individuação.",
+  gestalt: "Awareness, contato autêntico e o aqui-e-agora.",
+  socio_historica: "O humano se constitui no social, na cultura e na história.",
+  humanismo: "Conexão autêntica, escuta empática e fé no potencial humano.",
+};

@@ -16,9 +16,10 @@ function stripMarkdown(text) {
   return text.replace(/\*\*(.+?)\*\*/g, "$1");
 }
 
-export default function ShareButtons({ url, topApproach, topField }) {
+export default function ShareButtons({ url, storyUrl, topApproach, topField }) {
   const [copied, setCopied] = useState(false);
   const [nativeShared, setNativeShared] = useState(false);
+  const [storyBusy, setStoryBusy] = useState(false);
 
   const plainText = stripMarkdown(buildShareText(topApproach, topField));
   const whatsappText = `${plainText} ${url}`;
@@ -37,21 +38,66 @@ export default function ShareButtons({ url, topApproach, topField }) {
     }
   }
 
-  async function nativeShare() {
-    if (typeof navigator === "undefined" || !navigator.share) {
-      copyLink();
-      return;
-    }
+  async function shareStory() {
+    if (storyBusy) return;
+    setStoryBusy(true);
     try {
-      await navigator.share({
-        title: "Meu resultado no PsiEncontra",
-        text: plainText,
-        url,
-      });
-      setNativeShared(true);
-      setTimeout(() => setNativeShared(false), 2000);
-    } catch {
-      // user cancelled — no-op
+      if (storyUrl) {
+        try {
+          const res = await fetch(storyUrl);
+          if (res.ok) {
+            const blob = await res.blob();
+            const file = new File([blob], "psiencontra.png", { type: "image/png" });
+            if (
+              typeof navigator !== "undefined" &&
+              navigator.canShare &&
+              navigator.canShare({ files: [file] })
+            ) {
+              await navigator.share({
+                files: [file],
+                title: "Meu resultado no PsiEncontra",
+                text: plainText,
+              });
+              setNativeShared(true);
+              setTimeout(() => setNativeShared(false), 2000);
+              return;
+            }
+            // no file share support → download
+            const objectUrl = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = objectUrl;
+            a.download = "psiencontra.png";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(objectUrl);
+            setNativeShared(true);
+            setTimeout(() => setNativeShared(false), 2000);
+            return;
+          }
+        } catch {
+          // fall through to URL share
+        }
+      }
+
+      if (typeof navigator !== "undefined" && navigator.share) {
+        try {
+          await navigator.share({
+            title: "Meu resultado no PsiEncontra",
+            text: plainText,
+            url,
+          });
+          setNativeShared(true);
+          setTimeout(() => setNativeShared(false), 2000);
+          return;
+        } catch {
+          return;
+        }
+      }
+
+      copyLink();
+    } finally {
+      setStoryBusy(false);
     }
   }
 
@@ -90,14 +136,15 @@ export default function ShareButtons({ url, topApproach, topField }) {
         </a>
         <button
           type="button"
-          onClick={nativeShare}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-tr from-[#feda75] via-[#fa7e1e] to-[#d62976] text-white hover:brightness-110 transition-all cursor-pointer"
-          aria-label="Compartilhar no Instagram ou app nativo"
+          onClick={shareStory}
+          disabled={storyBusy}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-tr from-[#feda75] via-[#fa7e1e] to-[#d62976] text-white hover:brightness-110 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+          aria-label="Compartilhar como imagem (Instagram Story, WhatsApp, ...)"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.053 1.805.248 2.227.413.56.217.96.477 1.38.896.42.42.68.82.896 1.38.165.422.36 1.057.413 2.227.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.053 1.17-.248 1.805-.413 2.227-.217.56-.477.96-.896 1.38-.42.42-.82.68-1.38.896-.422.165-1.057.36-2.227.413-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.053-1.805-.248-2.227-.413a3.72 3.72 0 0 1-1.38-.896 3.72 3.72 0 0 1-.896-1.38c-.165-.422-.36-1.057-.413-2.227-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.053-1.17.248-1.805.413-2.227.217-.56.477-.96.896-1.38.42-.42.82-.68 1.38-.896.422-.165 1.057-.36 2.227-.413 1.266-.058 1.646-.07 4.85-.07zm0 3.838a5.999 5.999 0 1 0 0 11.998 5.999 5.999 0 0 0 0-11.998zm0 9.897a3.898 3.898 0 1 1 0-7.796 3.898 3.898 0 0 1 0 7.796zm6.406-10.845a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/>
           </svg>
-          {nativeShared ? "Compartilhado!" : "Instagram / Mais"}
+          {storyBusy ? "Gerando..." : nativeShared ? "Compartilhado!" : "Compartilhar Story"}
         </button>
         <button
           type="button"

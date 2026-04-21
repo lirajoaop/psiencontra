@@ -270,6 +270,7 @@ export default function ResultadoClient({ id, initialResult = null }) {
         {shareUrl && (
           <ShareButtons
             url={shareUrl}
+            storyUrl={`/api/share/${id}/story.png`}
             topApproach={sortedApproaches[0]?.label}
             topField={sortedFields[0]?.label}
           />
