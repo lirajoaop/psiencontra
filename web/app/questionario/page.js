@@ -306,7 +306,7 @@ export default function Questionario() {
             Anterior
           </Button>
 
-          <div className="flex gap-1">
+          <div className="hidden sm:flex gap-1">
             {questions.length <= 30 ? (
               questions.map((_, i) => (
                 <button
@@ -323,6 +323,9 @@ export default function Questionario() {
               </span>
             )}
           </div>
+          <span className="sm:hidden text-xs text-gray-400 dark:text-gray-500">
+            {current + 1} / {questions.length}
+          </span>
 
           {isLast ? (
             <Button
