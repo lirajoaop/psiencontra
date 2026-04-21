@@ -168,8 +168,8 @@ export default function ResultadoClient({ id, initialResult = null }) {
           </motion.section>
         )}
 
-        {/* Radar Charts */}
-        <div className="grid md:grid-cols-2 gap-6 mb-10">
+        {/* Radar Charts — hidden on mobile: labels truncate at 8 axes in narrow widths; ranking section below carries the same signal more legibly */}
+        <div className="hidden md:grid md:grid-cols-2 gap-6 mb-10">
           <RadarChartResult
             title="Abordagens Teóricas"
             scores={approachScores}
