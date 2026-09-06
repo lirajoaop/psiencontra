@@ -116,7 +116,7 @@ func (s *AIService) callGroq(prompt string) (*AIResult, error) {
 	url := "https://api.groq.com/openai/v1/chat/completions"
 
 	body := map[string]any{
-		"model": "llama-3.3-70b-versatile",
+		"model": "openai/gpt-oss-20b",
 		"messages": []map[string]string{
 			{"role": "system", "content": "You are a JSON generator. You MUST return only valid JSON. Every opening { must have a matching }. Every opening [ must have a matching ]. Never use ] to close an object that was opened with {."},
 			{"role": "user", "content": prompt},
