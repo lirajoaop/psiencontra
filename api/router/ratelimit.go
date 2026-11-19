@@ -18,6 +18,7 @@ type rateLimiter struct {
 	visitors map[string]*visitor
 	rate     float64 // tokens restored per second
 	burst    int     // max tokens (bucket size)
+	now      func() time.Time
 }
 
 func newRateLimiter(requestsPerMinute int, burst int) *rateLimiter {
@@ -25,6 +26,7 @@ func newRateLimiter(requestsPerMinute int, burst int) *rateLimiter {
 		visitors: make(map[string]*visitor),
 		rate:     float64(requestsPerMinute) / 60.0,
 		burst:    burst,
+		now:      time.Now,
 	}
 	go rl.cleanup()
 	return rl
@@ -35,14 +37,15 @@ func (rl *rateLimiter) allow(ip string) bool {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
 
+	now := rl.now()
 	v, exists := rl.visitors[ip]
 	if !exists {
-		rl.visitors[ip] = &visitor{tokens: float64(rl.burst) - 1, lastSeen: time.Now()}
+		rl.visitors[ip] = &visitor{tokens: float64(rl.burst) - 1, lastSeen: now}
 		return true
 	}
 
-	elapsed := time.Since(v.lastSeen).Seconds()
-	v.lastSeen = time.Now()
+	elapsed := now.Sub(v.lastSeen).Seconds()
+	v.lastSeen = now
 	v.tokens += elapsed * rl.rate
 	if v.tokens > float64(rl.burst) {
 		v.tokens = float64(rl.burst)
@@ -59,13 +62,19 @@ func (rl *rateLimiter) allow(ip string) bool {
 func (rl *rateLimiter) cleanup() {
 	for {
 		time.Sleep(5 * time.Minute)
-		rl.mu.Lock()
-		for ip, v := range rl.visitors {
-			if time.Since(v.lastSeen) > 10*time.Minute {
-				delete(rl.visitors, ip)
-			}
+		rl.evictStale(10 * time.Minute)
+	}
+}
+
+// evictStale drops visitors not seen for longer than maxIdle.
+func (rl *rateLimiter) evictStale(maxIdle time.Duration) {
+	rl.mu.Lock()
+	defer rl.mu.Unlock()
+	now := rl.now()
+	for ip, v := range rl.visitors {
+		if now.Sub(v.lastSeen) > maxIdle {
+			delete(rl.visitors, ip)
 		}
-		rl.mu.Unlock()
 	}
 }
 

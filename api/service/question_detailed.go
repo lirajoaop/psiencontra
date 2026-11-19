@@ -590,7 +590,6 @@ var detailedQuestions = []Question{
 		Block:   "fields",
 		Options: likertOptions("psicometria"),
 	},
-
 }
 
 // likertOptions returns the standard 1-5 Likert scale options, all mapping to
