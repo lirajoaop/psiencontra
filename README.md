@@ -1,5 +1,7 @@
 # PsiEncontra
 
+[![CI](https://github.com/lirajoaop/psiencontra/actions/workflows/ci.yml/badge.svg)](https://github.com/lirajoaop/psiencontra/actions/workflows/ci.yml)
+
 A web platform that helps Psychology students discover which theoretical approach and field of practice best match their profile. The student answers a structured questionnaire and receives a personalized affinity ranking with charts, detailed explanations and PDF export.
 
 > Live app: [psiencontra.vercel.app](https://psiencontra.vercel.app)
@@ -132,6 +134,7 @@ psiencontra/
 ├── api/                        # Go backend
 │   ├── config/                 # Configuration (database, env, logger)
 │   ├── handler/                # HTTP controllers (auth, sessions, questions, pdf, history)
+│   ├── internal/memrepo/       # In-memory repositories used by the tests
 │   ├── repository/             # Data access (users, sessions, responses, results)
 │   ├── router/                 # Route definitions, CORS, auth and rate-limit middleware
 │   ├── schemas/                # GORM models (User, Session, Response, Result)
@@ -144,6 +147,7 @@ psiencontra/
 │   ├── components/             # UI (LikertScale, RadarChartResult, Tooltip, AuthProvider, ...)
 │   ├── lib/                    # API client, auth-token, constants
 │   └── package.json
+├── .github/workflows/ci.yml    # CI: gofmt, go vet, go test -race, Next.js build
 ├── docker-compose.yml          # Local orchestration (PostgreSQL + API)
 ├── .env.example
 └── README.md
@@ -299,6 +303,17 @@ npm run dev
 ```
 
 Available at `http://localhost:3000`.
+
+### Running tests
+
+The backend tests need no database, network or API keys: repositories are replaced by in-memory fakes and the LLM providers by stubs (or `httptest` servers).
+
+```bash
+cd api
+go test -race -cover ./...
+```
+
+They cover the ipsative scoring engine, the Gemini → Groq fallback, the per-IP rate limiter, JWT auth (cookie and Bearer), the anonymous-session claim flow and the HTTP handlers. CI runs them on every push and pull request to `main`, together with `gofmt`, `go vet` and a production build of the frontend.
 
 ## Production Deployment
 
