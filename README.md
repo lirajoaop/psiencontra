@@ -345,4 +345,6 @@ PsiEncontra is a **self-reflection tool for Psychology students**, not a psychol
 
 ## License
 
-This project is for academic and educational use. The result is informative and does not replace professional guidance.
+The code is released under the [MIT License](LICENSE).
+
+The results are informative and do not replace professional guidance.
