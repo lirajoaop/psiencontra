@@ -5,24 +5,52 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/joaop/psiencontra/api/repository"
 	"github.com/joaop/psiencontra/api/schemas"
 )
 
+// SessionRepository is the subset of repository.SessionRepo that
+// SessionService needs. Interfaces let tests use in-memory fakes.
+type SessionRepository interface {
+	Create(*schemas.Session) error
+	FindByID(uuid.UUID) (*schemas.Session, error)
+	ClaimAnonymous(sessionID, userID uuid.UUID) (int64, error)
+	FindCompletedByUserID(uuid.UUID) ([]schemas.Session, error)
+}
+
+// ResponseRepository is the subset of repository.ResponseRepo that
+// SessionService needs.
+type ResponseRepository interface {
+	CreateBatch([]schemas.Response) error
+	FindBySessionID(uuid.UUID) ([]schemas.Response, error)
+}
+
+// ResultRepository is the subset of repository.ResultRepo that
+// SessionService needs.
+type ResultRepository interface {
+	Create(*schemas.Result) error
+	FindBySessionID(uuid.UUID) (*schemas.Result, error)
+}
+
+// Analyzer turns a prompt into an AIResult, returning the name of the
+// provider that answered. Implemented by AIService.
+type Analyzer interface {
+	Analyze(prompt string) (*AIResult, string, error)
+}
+
 type SessionService struct {
-	sessionRepo  *repository.SessionRepo
-	responseRepo *repository.ResponseRepo
-	resultRepo   *repository.ResultRepo
+	sessionRepo  SessionRepository
+	responseRepo ResponseRepository
+	resultRepo   ResultRepository
 	questionSvc  *QuestionService
-	aiSvc        *AIService
+	aiSvc        Analyzer
 }
 
 func NewSessionService(
-	sessionRepo *repository.SessionRepo,
-	responseRepo *repository.ResponseRepo,
-	resultRepo *repository.ResultRepo,
+	sessionRepo SessionRepository,
+	responseRepo ResponseRepository,
+	resultRepo ResultRepository,
 	questionSvc *QuestionService,
-	aiSvc *AIService,
+	aiSvc Analyzer,
 ) *SessionService {
 	return &SessionService{
 		sessionRepo:  sessionRepo,

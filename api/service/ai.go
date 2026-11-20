@@ -12,10 +12,22 @@ import (
 	"github.com/joaop/psiencontra/api/config"
 )
 
+const (
+	defaultGeminiURL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+	defaultGroqURL   = "https://api.groq.com/openai/v1/chat/completions"
+)
+
+// LLMProvider is a single LLM backend able to turn a prompt into an AIResult.
+// Gemini and Groq implement it; tests substitute fakes.
+type LLMProvider interface {
+	Name() string
+	Generate(prompt string) (*AIResult, error)
+}
+
+// AIService tries each configured provider in order and returns the first
+// successful result (Gemini first, Groq as fallback).
 type AIService struct {
-	geminiKey  string
-	groqKey    string
-	httpClient *http.Client
+	providers []LLMProvider
 }
 
 type AIResult struct {
@@ -27,37 +39,63 @@ type AIResult struct {
 }
 
 func NewAIService() *AIService {
-	return &AIService{
-		geminiKey: config.GetEnv("GEMINI_API_KEY", ""),
-		groqKey:   config.GetEnv("GROQ_API_KEY", ""),
-		httpClient: &http.Client{
-			Timeout: 60 * time.Second,
-		},
+	httpClient := &http.Client{Timeout: 60 * time.Second}
+	var providers []LLMProvider
+	if key := config.GetEnv("GEMINI_API_KEY", ""); key != "" {
+		providers = append(providers, &geminiProvider{apiKey: key, baseURL: defaultGeminiURL, httpClient: httpClient})
 	}
+	if key := config.GetEnv("GROQ_API_KEY", ""); key != "" {
+		providers = append(providers, &groqProvider{apiKey: key, url: defaultGroqURL, httpClient: httpClient})
+	}
+	return NewAIServiceWithProviders(providers...)
 }
 
+// NewAIServiceWithProviders builds an AIService from an explicit, ordered
+// list of providers. Mainly useful for tests.
+func NewAIServiceWithProviders(providers ...LLMProvider) *AIService {
+	return &AIService{providers: providers}
+}
+
+// Analyze sends the prompt to each provider in order, falling back to the
+// next one on failure. It returns the result and the name of the provider
+// that produced it.
 func (s *AIService) Analyze(prompt string) (*AIResult, string, error) {
-	if s.geminiKey != "" {
-		result, err := s.callGemini(prompt)
-		if err == nil {
-			return result, "gemini", nil
-		}
-		config.Log.Error.Printf("Gemini failed, falling back to Groq: %v", err)
+	if len(s.providers) == 0 {
+		return nil, "", fmt.Errorf("no AI provider configured")
 	}
 
-	if s.groqKey != "" {
-		result, err := s.callGroq(prompt)
+	var lastErr error
+	for i, p := range s.providers {
+		result, err := p.Generate(prompt)
 		if err == nil {
-			return result, "groq", nil
+			return result, p.Name(), nil
 		}
-		return nil, "", fmt.Errorf("both AI providers failed: %v", err)
+		lastErr = err
+		if i < len(s.providers)-1 && config.Log != nil {
+			config.Log.Error.Printf("%s failed, falling back to %s: %v", p.Name(), s.providers[i+1].Name(), err)
+		}
 	}
-
-	return nil, "", fmt.Errorf("no AI provider configured")
+	return nil, "", fmt.Errorf("all AI providers failed: %w", lastErr)
 }
 
-func (s *AIService) callGemini(prompt string) (*AIResult, error) {
-	url := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=%s", s.geminiKey)
+type geminiProvider struct {
+	apiKey     string
+	baseURL    string
+	httpClient *http.Client
+}
+
+func (p *geminiProvider) Name() string { return "gemini" }
+
+type groqProvider struct {
+	apiKey     string
+	url        string
+	httpClient *http.Client
+}
+
+func (p *groqProvider) Name() string { return "groq" }
+
+func (p *geminiProvider) Generate(prompt string) (*AIResult, error) {
+	url := p.baseURL + "?key=" + p.apiKey
 
 	body := map[string]any{
 		"contents": []map[string]any{
@@ -79,7 +117,7 @@ func (s *AIService) callGemini(prompt string) (*AIResult, error) {
 		return nil, err
 	}
 
-	resp, err := s.httpClient.Post(url, "application/json", bytes.NewReader(jsonBody))
+	resp, err := p.httpClient.Post(url, "application/json", bytes.NewReader(jsonBody))
 	if err != nil {
 		return nil, err
 	}
@@ -112,8 +150,7 @@ func (s *AIService) callGemini(prompt string) (*AIResult, error) {
 	return parseAIResponse(text)
 }
 
-func (s *AIService) callGroq(prompt string) (*AIResult, error) {
-	url := "https://api.groq.com/openai/v1/chat/completions"
+func (p *groqProvider) Generate(prompt string) (*AIResult, error) {
 
 	body := map[string]any{
 		"model": "openai/gpt-oss-20b",
@@ -131,14 +168,14 @@ func (s *AIService) callGroq(prompt string) (*AIResult, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", url, bytes.NewReader(jsonBody))
+	req, err := http.NewRequest("POST", p.url, bytes.NewReader(jsonBody))
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+s.groqKey)
+	req.Header.Set("Authorization", "Bearer "+p.apiKey)
 
-	resp, err := s.httpClient.Do(req)
+	resp, err := p.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
