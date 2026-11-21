@@ -14,8 +14,8 @@ import (
 
 const (
 	geminiModelsURL = "https://generativelanguage.googleapis.com/v1beta/models/"
-	// defaultGeminiModel follows Google's current Flash release. Override with GEMINI_MODEL.
-	defaultGeminiModel = "gemini-flash-latest"
+	// defaultGeminiModel follows Google's current Flash-Lite release. Override with GEMINI_MODEL.
+	defaultGeminiModel = "gemini-flash-lite-latest"
 	defaultGroqURL     = "https://api.groq.com/openai/v1/chat/completions"
 )
 
