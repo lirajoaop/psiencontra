@@ -14,10 +14,7 @@ import (
 
 const (
 	geminiModelsURL = "https://generativelanguage.googleapis.com/v1beta/models/"
-	// defaultGeminiModel is Google's alias for the current Flash release.
-	// Google gives two weeks' notice before the model behind it changes, so a
-	// shutdown like gemini-2.0-flash's (June 2026) no longer breaks the app.
-	// Set GEMINI_MODEL to pin a specific model instead.
+	// defaultGeminiModel follows Google's current Flash release. Override with GEMINI_MODEL.
 	defaultGeminiModel = "gemini-flash-latest"
 	defaultGroqURL     = "https://api.groq.com/openai/v1/chat/completions"
 )
