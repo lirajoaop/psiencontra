@@ -318,3 +318,41 @@ func groqBody(t *testing.T, content string) string {
 	}
 	return string(b)
 }
+
+func TestGeminiURL(t *testing.T) {
+	got := geminiURL("gemini-flash-latest")
+	want := "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
+	if got != want {
+		t.Fatalf("geminiURL() = %q, want %q", got, want)
+	}
+}
+
+func TestNewAIServiceGeminiModel(t *testing.T) {
+	tests := []struct {
+		name  string
+		model string
+		want  string
+	}{
+		{"default alias", "", geminiURL(defaultGeminiModel)},
+		{"pinned by env", "gemini-3.6-flash", geminiURL("gemini-3.6-flash")},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Setenv("GEMINI_API_KEY", "test-key")
+			t.Setenv("GROQ_API_KEY", "")
+			t.Setenv("GEMINI_MODEL", tt.model)
+
+			svc := NewAIService()
+			if len(svc.providers) != 1 {
+				t.Fatalf("got %d providers, want 1", len(svc.providers))
+			}
+			p, ok := svc.providers[0].(*geminiProvider)
+			if !ok {
+				t.Fatalf("provider is %T, want *geminiProvider", svc.providers[0])
+			}
+			if p.baseURL != tt.want {
+				t.Fatalf("baseURL = %q, want %q", p.baseURL, tt.want)
+			}
+		})
+	}
+}

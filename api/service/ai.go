@@ -13,9 +13,16 @@ import (
 )
 
 const (
-	defaultGeminiURL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
-	defaultGroqURL   = "https://api.groq.com/openai/v1/chat/completions"
+	geminiModelsURL = "https://generativelanguage.googleapis.com/v1beta/models/"
+	// defaultGeminiModel follows Google's current Flash release. Override with GEMINI_MODEL.
+	defaultGeminiModel = "gemini-flash-latest"
+	defaultGroqURL     = "https://api.groq.com/openai/v1/chat/completions"
 )
+
+// geminiURL returns the generateContent endpoint for a Gemini model.
+func geminiURL(model string) string {
+	return geminiModelsURL + model + ":generateContent"
+}
 
 // LLMProvider is a single LLM backend able to turn a prompt into an AIResult.
 // Gemini and Groq implement it; tests substitute fakes.
@@ -42,7 +49,8 @@ func NewAIService() *AIService {
 	httpClient := &http.Client{Timeout: 60 * time.Second}
 	var providers []LLMProvider
 	if key := config.GetEnv("GEMINI_API_KEY", ""); key != "" {
-		providers = append(providers, &geminiProvider{apiKey: key, baseURL: defaultGeminiURL, httpClient: httpClient})
+		model := config.GetEnv("GEMINI_MODEL", defaultGeminiModel)
+		providers = append(providers, &geminiProvider{apiKey: key, baseURL: geminiURL(model), httpClient: httpClient})
 	}
 	if key := config.GetEnv("GROQ_API_KEY", ""); key != "" {
 		providers = append(providers, &groqProvider{apiKey: key, url: defaultGroqURL, httpClient: httpClient})
