@@ -320,8 +320,8 @@ func groqBody(t *testing.T, content string) string {
 }
 
 func TestGeminiURL(t *testing.T) {
-	got := geminiURL("gemini-flash-latest")
-	want := "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
+	got := geminiURL("gemini-flash-lite-latest")
+	want := "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent"
 	if got != want {
 		t.Fatalf("geminiURL() = %q, want %q", got, want)
 	}
