@@ -118,7 +118,7 @@ See [`api/service/scoring.go`](api/service/scoring.go) for the implementation.
 - **godotenv** — environment variables
 
 ### AI
-- **Google Gemini 2.0 Flash** — primary analysis provider
+- **Google Gemini Flash** — primary analysis provider (`gemini-flash-latest` by default, configurable with `GEMINI_MODEL`)
 - **Groq Llama 3.3 70B** — fallback provider
 
 ### Infrastructure
@@ -330,6 +330,7 @@ They cover the ipsative scoring engine, the Gemini → Groq fallback, the per-IP
 **Railway (API):**
 - `DATABASE_URL` — provided automatically by Railway PostgreSQL
 - `GEMINI_API_KEY`
+- `GEMINI_MODEL` — optional; defaults to `gemini-flash-latest`. Set it to pin a model (e.g. `gemini-3.6-flash`)
 - `GROQ_API_KEY`
 - `FRONTEND_URL`
 - `PORT` — `8080`
